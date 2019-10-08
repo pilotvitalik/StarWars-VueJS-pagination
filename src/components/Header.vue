@@ -81,7 +81,7 @@ header{
 			h3{
 				font-size: 24px;
 				line-height: 28px;
-				letter-spacing: 0.11em;
+				letter-spacing: 0.13em;
 			}
 		}
 	}
@@ -103,7 +103,7 @@ header{
 			h3{
 				font-size: 13.5px;
 				line-height: 17.5px;
-				letter-spacing: 0.11em;
+				letter-spacing: 0.1em;
 			}
 		}
 	}
