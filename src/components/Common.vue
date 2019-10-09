@@ -5,64 +5,10 @@
 		</div>
 		<nav>
 			<ul>
-				<li><span>Name</span>
+				<li v-for='people in comm' :key='people.id'><span>{{people.name}}</span>
 					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
-					</ul>
-				</li>
-				<li><span>Name</span>
-					<ul>
-						<li></li>
-						<li>Species</li>
+						<li><img v-bind:src="people.img"/></li>
+						<li>{{people.species}}</li>
 					</ul>
 				</li>
 			</ul>
@@ -71,11 +17,53 @@
 </template>
 
 <script>
+import luke_skywalker  from '../assets/common/peoples/luke_skywalker.jpg';
+import c_3po  from '../assets/common/peoples/c_3po.jpg';
+import r2_d2  from '../assets/common/peoples/r2_d2.jpg';
+import darth_vader  from '../assets/common/peoples/darth_vader.jpg';
+import lela_organa  from '../assets/common/peoples/lela_organa.jpg';
+import owen_lars  from '../assets/common/peoples/owen_lars.jpg';
+import beru_whitesun_lars  from '../assets/common/peoples/beru_whitesun_lars.jpg';
+import r5_d4  from '../assets/common/peoples/r5_d4.jpg';
+import biggsDarklighter  from '../assets/common/peoples/biggs_darklighter.png';
+import obi_wan_kenobi  from '../assets/common/peoples/obi_wan_kenobi.jpg';
+
 export default {
   data() {
     return {
-    	blogs:[]
+	    	peoples:[],
+	    	images: [
+	    		{img: luke_skywalker},
+	    		{img: c_3po},
+	    		{img: r2_d2},
+	    		{img: darth_vader},
+	    		{img: lela_organa},
+	    		{img: owen_lars},
+	    		{img: beru_whitesun_lars},
+	    		{img: r5_d4},
+	    		{img: biggsDarklighter},
+	    		{img: obi_wan_kenobi},
+	    	],
+	    	comm: [],
     };
+  },
+  created(){
+  	this.$http.get('https://swapi.co/api/people/').then((data) => {
+  		this.peoples = data.body.results;	
+  		let common = [];
+  		for(let i = 0; i < this.peoples.length; i++){
+  			this.peoples[i]
+  			for(let k = 0; k < this.images.length; k++){
+  				this.images[k]
+  				if(i === k){
+  			common.push(Object.assign(this.peoples[i],this.images[k]));
+  		}
+  			};
+  			
+  		};
+  		this.comm = common;
+  		console.log('false')
+  	})
   },
 };
 </script>
@@ -150,6 +138,7 @@ export default {
 						height: 80px;
 						border-radius: 50%;
 						background: yellow;
+						overflow: hidden;
 					}
 					li:last-child{
 						display: inline-block;
@@ -161,6 +150,118 @@ export default {
 						font-size: 13px;
 						line-height: 15px;
 						margin: 0 auto;
+					}
+				}
+			}
+			&>li:first-child{
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							top: -6px;
+							left: -8px;
+						}
+					}
+				}
+			}
+			&>li:nth-child(2){
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							 top: -8px;
+							left: -10px; 
+						}
+					}
+				}
+			}
+			&>li:nth-child(3){
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							top: 0px;
+							left: -10px;
+						}
+					}
+				}
+			}
+			&>li:nth-child(4){
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							top: -2px;
+							left: -18px;
+						}
+					}
+				}
+			}
+			&>li:nth-child(5){
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							left: -11px;
+						}
+					}
+				}
+			}
+			&>li:nth-child(6){
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							top: -8px;
+							left: -11px;
+							transform: scale(0.85);
+						}
+					}
+				}
+			}
+			&>li:nth-child(7){
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							top: -8px;
+							left: -11px;
+							transform: scale(0.85);
+						}
+					}
+				}
+			}
+			&>li:nth-child(8){
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							top: -4px;
+							left: -10px;
+						}
+					}
+				}
+			}
+			&>li:nth-child(9){
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							top: -1px;
+							left: -10px;
+						}
+					}
+				}
+			}
+			&>li:last-child{
+				ul{
+					li:first-child{
+						img{
+							position: absolute;
+							top: -5px;
+							left: -22px;
+							transform: scale(0.9);
+						}
 					}
 				}
 			}
