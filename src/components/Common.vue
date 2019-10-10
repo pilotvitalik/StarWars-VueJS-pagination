@@ -8,7 +8,7 @@
 				<li v-for='people in comm' :key='people.id'><span>{{people.name}}</span>
 					<ul>
 						<li><img v-bind:src="people.img"/></li>
-						<li>{{people.species}}</li>
+						<li>{{people.specie}}</li>
 					</ul>
 				</li>
 			</ul>
@@ -45,24 +45,41 @@ export default {
 	    		{img: obi_wan_kenobi},
 	    	],
 	    	comm: [],
+	    	species: [],
     };
   },
-  created(){
+  created(data){
+  	let c = [];
+  	for(let i = 0; i < 37; i++){
+  		this.$http.get('https://swapi.co/api/species/' + (i+1) + '/').then((data) => {
+		c.push(data.body)
+		this.species = c.map(item => {
+  			return {
+  				specie : item.name,
+  				key: item.url
+  			}
+  		})
+	})
+  	}
   	this.$http.get('https://swapi.co/api/people/').then((data) => {
   		this.peoples = data.body.results;	
   		let common = [];
   		for(let i = 0; i < this.peoples.length; i++){
-  			this.peoples[i]
   			for(let k = 0; k < this.images.length; k++){
-  				this.images[k]
   				if(i === k){
-  			common.push(Object.assign(this.peoples[i],this.images[k]));
-  		}
+  					common.push(Object.assign(this.peoples[i],this.images[k]));
+  				}
   			};
-  			
   		};
   		this.comm = common;
-  		console.log('false')
+  		for(let j = 0; j < this.comm.length; j++){
+  			this.comm[j].specie = '';
+  					for(let k = 0; k < this.species.length; k++){
+  						if(this.comm[j].species[0] === this.species[k].key){
+  							this.comm[j].specie = this.species[k].specie;
+  						}
+  					}
+  			}
   	})
   },
 };
