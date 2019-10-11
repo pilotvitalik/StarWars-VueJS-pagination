@@ -1,7 +1,7 @@
 <template>
   <div id="app">
    <appHeader></appHeader>
-   <Common></Common>
+   <router-view></router-view>
    <appFooter></appFooter>
   </div>
 </template>
@@ -29,5 +29,6 @@ export default {
   margin: 0;
   padding: 0;
   list-style-type: none;
+  text-decoration: none;
 }
 </style>

@@ -6,11 +6,12 @@
 		</div>
 		<nav>
 			<ul>
-				<li v-for='people in comm' :key='people.id'><span>{{people.name}}</span>
+				<li v-for='people in comm' :key='people.id'><router-link :to="'/' + people.height"><span>{{people.name}}</span>
 					<ul>
 						<li><img v-bind:src="people.img"/></li>
 						<li>{{people.specie}}</li>
 					</ul>
+					</router-link>
 				</li>
 			</ul>
 		</nav>
@@ -111,6 +112,7 @@ export default {
 			position: relative;
 			width: 100%;
 			height: 100%;
+			padding-left: 5px;
 			color: #808080;
 			font-family: 'Roboto', sans-serif;
 			font-weight: 500;
@@ -119,6 +121,7 @@ export default {
 			background: #333;
 			border: none;
 			border-bottom: 1px solid #808080;
+			outline: none;
 		}
 		img{
 			display: block;
@@ -153,46 +156,61 @@ export default {
 				background: #1a1a1a;
 				border-radius: 8px;
 				box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-				&>span{
-					display: inline-block;
-					position: absolute;
-					color: #fff;
-					font-family: 'Roboto', sans-serif;
-					font-weight: bold;
-					font-size: 18px;
-					line-height: 21px;
-					top: 183px;
-					z-index: 111;
-				}
-				ul{
+				&>a{
 					display: flex;
 					flex-direction: column;
-					justify-content: space-between;
 					position: relative;
-					width: 80px;
-					height: 135px;
-					top: 93px;
-					li:first-child{
-						display: block;
-						position: relative;
-						width: 100%;
-						height: 80px;
-						border-radius: 50%;
-						background: yellow;
-						overflow: hidden;
-					}
-					li:last-child{
+					align-items: center;
+					width: 100%;
+					height: 100%;
+					top: 0;
+					border-radius: 8px;
+					background: transparent;
+					&>span{
 						display: inline-block;
-						position: relative;
-						width: 100%;
-						height: 15px;
-						margin: 0;
-						color: #808080;
+						position: absolute;
+						color: #fff;
 						font-family: 'Roboto', sans-serif;
-						font-size: 13px;
-						line-height: 15px;
-						text-align: center;
+						font-weight: bold;
+						font-size: 18px;
+						line-height: 21px;
+						top: 183px;
+						z-index: 111;
 					}
+				
+					ul{
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						position: relative;
+						width: 80px;
+						height: 135px;
+						top: 93px;
+						li:first-child{
+							display: block;
+							position: relative;
+							width: 100%;
+							height: 80px;
+							border-radius: 50%;
+							background: yellow;
+							overflow: hidden;
+						}
+						li:last-child{
+							display: inline-block;
+							position: relative;
+							width: 100%;
+							height: 15px;
+							margin: 0;
+							color: #808080;
+							font-family: 'Roboto', sans-serif;
+							font-size: 13px;
+							line-height: 15px;
+							text-align: center;
+						}
+					}
+				}
+				&>a:hover{
+					box-shadow: 0 10px 40px rgba(37,136,167,0.38)
 				}
 			}
 			&>li:first-child{
@@ -309,5 +327,6 @@ export default {
 			}
 		}
 	}
+
 }
 </style>
