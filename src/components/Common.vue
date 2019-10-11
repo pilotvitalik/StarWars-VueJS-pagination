@@ -30,8 +30,12 @@ import r5_d4  from '../assets/common/peoples/r5_d4.jpg';
 import biggsDarklighter  from '../assets/common/peoples/biggs_darklighter.png';
 import obi_wan_kenobi  from '../assets/common/peoples/obi_wan_kenobi.jpg';
 import search from '../assets/common/search.svg'
+import People from './People/People.vue'
 
 export default {
+	components: {
+		People: People,
+	},
   data() {
     return {
 	    	peoples:[],
