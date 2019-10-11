@@ -1,7 +1,8 @@
 <template>
 	<div id='common'>
 		<div class='search'>
-			Поиск
+			<input type='text' v-model='search' placeholder='Search by name'>
+			<img :src='searchImg'>
 		</div>
 		<nav>
 			<ul>
@@ -27,6 +28,7 @@ import beru_whitesun_lars  from '../assets/common/peoples/beru_whitesun_lars.jpg
 import r5_d4  from '../assets/common/peoples/r5_d4.jpg';
 import biggsDarklighter  from '../assets/common/peoples/biggs_darklighter.png';
 import obi_wan_kenobi  from '../assets/common/peoples/obi_wan_kenobi.jpg';
+import search from '../assets/common/search.svg'
 
 export default {
   data() {
@@ -46,6 +48,8 @@ export default {
 	    	],
 	    	comm: [],
 	    	species: [],
+	    	searchImg: search,
+	    	search: '',
     };
   },
   created(data){
@@ -102,6 +106,26 @@ export default {
 		height: 29px;
 		background: green;
 		margin: 107px auto 80px auto;
+		input{
+			display: block;
+			position: relative;
+			width: 100%;
+			height: 100%;
+			color: #808080;
+			font-family: 'Roboto', sans-serif;
+			font-weight: 500;
+			font-size: 18px;
+			line-height: 21px;
+			background: #333;
+			border: none;
+			border-bottom: 1px solid #808080;
+		}
+		img{
+			display: block;
+			position: absolute;
+			top: 0;
+			right: 5px;
+		}
 	}
 	nav{
 		display: block;
@@ -129,7 +153,7 @@ export default {
 				background: #1a1a1a;
 				border-radius: 8px;
 				box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-				span{
+				&>span{
 					display: inline-block;
 					position: absolute;
 					color: #fff;
@@ -160,13 +184,14 @@ export default {
 					li:last-child{
 						display: inline-block;
 						position: relative;
-						width: 46px;
+						width: 100%;
 						height: 15px;
+						margin: 0;
 						color: #808080;
 						font-family: 'Roboto', sans-serif;
 						font-size: 13px;
 						line-height: 15px;
-						margin: 0 auto;
+						text-align: center;
 					}
 				}
 			}
