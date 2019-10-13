@@ -1,21 +1,18 @@
 <template>
   <div id="app">
-   <appHeader></appHeader>
-   <router-view></router-view>
-   <appFooter></appFooter>
+   <Wrapper></Wrapper>
+   <People></People>
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue';
-import Common from './components/Common.vue';
-import Footer from './components/Footer.vue';
+import Wrapper from './components/Wrapper/Wrapper.vue';
+import People from './components/People/People.vue';
 
 export default {
   components: {
-    appHeader: Header,
-    Common: Common,
-    appFooter: Footer,
+    Wrapper: Wrapper,
+    People: People,
   },
   data() {
     return {

@@ -1,7 +1,5 @@
-import Common from './components/Common.vue'
-import People from './components/People/People.vue'
+import Common from './components/Wrapper/Common/Common.vue'
 
 export default [
 	{path: '/', component: Common},
-	{path: '/:id', component: People},
 ]

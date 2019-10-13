@@ -1,12 +1,12 @@
 <template>
   <header id="Header">
   	<div class='head'>
-  		<img src='../assets/header/main.png'>
+  		<img src='../../../assets/header/main.png'>
   	</div>
    <div class='logo'>
-   	<img class='star' src='../assets/header/star.png'>
+   	<img class='star' src='../../../assets/header/star.png'>
    	<h3>Character encyclopedia</h3>
-   	<img class='wars' src='../assets/header/wars.png'>
+   	<img class='wars' src='../../../assets/header/wars.png'>
    </div>
   </header>
 </template>

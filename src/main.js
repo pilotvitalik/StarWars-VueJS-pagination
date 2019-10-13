@@ -6,13 +6,15 @@ import Routes from './Routers.js'
 
 Vue.config.productionTip = false;
 
+export const bus = new Vue();
+
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
 const router = new VueRouter({
 	routes: Routes,
 	mode: 'history'
-	})
+	});
 
 new Vue({
   render: h => h(App),

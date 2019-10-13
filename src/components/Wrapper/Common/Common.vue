@@ -6,12 +6,11 @@
 		</div>
 		<nav>
 			<ul>
-				<li v-for='people in comm' :key='people.id'><router-link :to="'/' + people.height"><span>{{people.name}}</span>
+				<li v-for='people in comm' :key='people.id' @click = 'descript'><span>{{people.name}}</span>
 					<ul>
 						<li><img v-bind:src="people.img"/></li>
 						<li>{{people.specie}}</li>
 					</ul>
-					</router-link>
 				</li>
 			</ul>
 		</nav>
@@ -19,23 +18,21 @@
 </template>
 
 <script>
-import luke_skywalker  from '../assets/common/peoples/luke_skywalker.jpg';
-import c_3po  from '../assets/common/peoples/c_3po.jpg';
-import r2_d2  from '../assets/common/peoples/r2_d2.jpg';
-import darth_vader  from '../assets/common/peoples/darth_vader.jpg';
-import lela_organa  from '../assets/common/peoples/lela_organa.jpg';
-import owen_lars  from '../assets/common/peoples/owen_lars.jpg';
-import beru_whitesun_lars  from '../assets/common/peoples/beru_whitesun_lars.jpg';
-import r5_d4  from '../assets/common/peoples/r5_d4.jpg';
-import biggsDarklighter  from '../assets/common/peoples/biggs_darklighter.png';
-import obi_wan_kenobi  from '../assets/common/peoples/obi_wan_kenobi.jpg';
-import search from '../assets/common/search.svg'
-import People from './People/People.vue'
+import {bus} from '../../../main.js'
+
+import luke_skywalker  from '../../../assets/common/peoples/luke_skywalker.jpg';
+import c_3po  from '../../../assets/common/peoples/c_3po.jpg';
+import r2_d2  from '../../../assets/common/peoples/r2_d2.jpg';
+import darth_vader  from '../../../assets/common/peoples/darth_vader.jpg';
+import lela_organa  from '../../../assets/common/peoples/lela_organa.jpg';
+import owen_lars  from '../../../assets/common/peoples/owen_lars.jpg';
+import beru_whitesun_lars  from '../../../assets/common/peoples/beru_whitesun_lars.jpg';
+import r5_d4  from '../../../assets/common/peoples/r5_d4.jpg';
+import biggsDarklighter  from '../../../assets/common/peoples/biggs_darklighter.png';
+import obi_wan_kenobi  from '../../../assets/common/peoples/obi_wan_kenobi.jpg';
+import search from '../../../assets/common/search.svg'
 
 export default {
-	components: {
-		People: People,
-	},
   data() {
     return {
 	    	peoples:[],
@@ -55,13 +52,24 @@ export default {
 	    	species: [],
 	    	searchImg: search,
 	    	search: '',
+	    	show: false,
     };
   },
-  created(data){
+  methods: {
+  	descript: function(){
+  		if(this.show == false){
+  			bus.$emit('show', true);
+  			bus.$emit('blur', 'blur(5px)');
+  			document.querySelector('body').style.overflowY = 'hidden';
+  			document.querySelector('body').style.width = '100%'
+  		}
+  	}
+  },
+  created(){
   	let c = [];
   	for(let i = 0; i < 37; i++){
-  		this.$http.get('https://swapi.co/api/species/' + (i+1) + '/').then((data) => {
-		c.push(data.body)
+  		this.$http.get('https://swapi.co/api/species/' + (i+1) + '/').then(response => {
+		c.push(response.body)
 		this.species = c.map(item => {
   			return {
   				specie : item.name,
@@ -69,9 +77,9 @@ export default {
   			}
   		})
 	})
-  	}
-  	this.$http.get('https://swapi.co/api/people/').then((data) => {
-  		this.peoples = data.body.results;	
+  	};
+  	this.$http.get('https://swapi.co/api/people/').then(response => {
+  		this.peoples = response.body.results;	
   		let common = [];
   		for(let i = 0; i < this.peoples.length; i++){
   			for(let k = 0; k < this.images.length; k++){
@@ -89,6 +97,20 @@ export default {
   						}
   					}
   			}
+  	});
+  	bus.$on('showCom', data => {
+  		this.show = data;
+  		document.querySelector('body').style.overflowY = 'auto';
+  		let withScroll = document.documentElement.clientWidth
+        let outScroll = window.innerWidth
+        let body = document.querySelector('body')
+        if(withScroll < outScroll){
+          let delta = (outScroll - withScroll)*100/outScroll;
+          let newDelta = parseFloat(delta.toFixed(16), 10);
+          body.style.width = (100+newDelta)+'%';
+          body.style.overflowX = 'hidden';
+        }
+  		bus.$emit('show', false);
   	})
   },
 };
@@ -160,16 +182,6 @@ export default {
 				background: #1a1a1a;
 				border-radius: 8px;
 				box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-				&>a{
-					display: flex;
-					flex-direction: column;
-					position: relative;
-					align-items: center;
-					width: 100%;
-					height: 100%;
-					top: 0;
-					border-radius: 8px;
-					background: transparent;
 					&>span{
 						display: inline-block;
 						position: absolute;
@@ -212,10 +224,10 @@ export default {
 							text-align: center;
 						}
 					}
-				}
-				&>a:hover{
-					box-shadow: 0 10px 40px rgba(37,136,167,0.38)
-				}
+			}
+			&>li:hover{
+				cursor: pointer;
+				box-shadow: 0 10px 40px rgba(37, 136, 167, 0.38);
 			}
 			&>li:first-child{
 				ul{

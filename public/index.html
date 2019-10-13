@@ -14,5 +14,21 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script>
+      function start(){
+        let withScroll = document.documentElement.clientWidth
+        let outScroll = window.innerWidth
+        let body = document.querySelector('body')
+        let footer = document.querySelector('#footer>h3')
+        if(withScroll < outScroll){
+          let delta = (outScroll - withScroll)*100/outScroll;
+          let newDelta = parseFloat(delta.toFixed(2), 10);
+          body.style.width = (100+newDelta)+'%';
+          body.style.overflowX = 'hidden';
+          footer.style.left = -newDelta+'%';
+        }
+      }
+      document.addEventListener('DOMContentLoaded', start);
+    </script>
   </body>
 </html>
