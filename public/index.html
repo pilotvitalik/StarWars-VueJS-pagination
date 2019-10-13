@@ -22,7 +22,7 @@
         let footer = document.querySelector('#footer>h3')
         if(withScroll < outScroll){
           let delta = (outScroll - withScroll)*100/outScroll;
-          let newDelta = parseFloat(delta.toFixed(2), 10);
+          let newDelta = parseFloat(delta.toFixed(2), 10);  
           body.style.width = (100+newDelta)+'%';
           body.style.overflowX = 'hidden';
           footer.style.left = -newDelta+'%';
