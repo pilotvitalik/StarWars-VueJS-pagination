@@ -2,6 +2,7 @@
   <div id="wrapper" :style='{filter: blur, pointerEvents: mouse}'>
    <appHeader></appHeader>
    <router-view></router-view>
+   <Pages></Pages>
    <appFooter></appFooter>
   </div>
 </template>
@@ -12,12 +13,14 @@ import {bus} from '../../main.js'
 import Header from './Header/Header.vue';
 import Common from './Common/Common.vue';
 import Footer from './Footer/Footer.vue';
+import Pagination from './Common/Pagination/Pagination.vue'
 
 export default {
   components: {
     appHeader: Header,
     Common: Common,
     appFooter: Footer,
+    Pages: Pagination 
   },
   data() {
     return {
