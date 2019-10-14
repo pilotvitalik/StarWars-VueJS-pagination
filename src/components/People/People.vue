@@ -6,8 +6,8 @@
       </div>
       <div class='name'>
         <ul>
-          <li></li>
-          <li><span>Name</span></li>
+          <li><img :src='people[0].image'></li>
+          <li><span>{{people[0].name}}</span></li>
         </ul>
         <span></span>
       </div>
@@ -17,21 +17,21 @@
             <ul>
               <li class='img'><img src='../../assets/common/calend.svg'></li>
               <li class='nameDesc'>Birth year</li>
-              <li class='desc'><span>Birth year</span></li>
+              <li class='desc'><span>{{people[0].birth}}</span></li>
             </ul>
           </li>
           <li>
             <ul>
               <li class='img'><img src='../../assets/common/ufo.svg'></li>
               <li class='nameDesc'>Species</li>
-              <li class='desc'><span>Species</span></li>
+              <li class='desc'><span>{{people[0].specie}}</span></li>
             </ul>
           </li>
           <li>
             <ul>
               <li class='img'><img src='../../assets/common/gender.svg'></li>
               <li class='nameDesc'>Gender</li>
-              <li class='desc'><span>Gender</span></li>
+              <li class='desc'><span>{{people[0].gender}}</span></li>
             </ul>
           </li>
         </ul>
@@ -40,14 +40,14 @@
             <ul>
               <li class='img'><img src='../../assets/common/world.svg'></li>
               <li class='nameDesc'>Homeworld</li>
-              <li class='desc'><span>Homeworld</span></li>
+              <li class='desc'><span>{{people[0].planet}}</span></li>
             </ul>
           </li>
           <li>
             <ul>
               <li class='img'><img src='../../assets/common/film.svg'></li>
               <li class='nameDesc'>Films</li>
-              <li class='desc'><span>Films</span></li>
+              <li class='desc'><span v-for='film in people[0].film' :key='film.id'>{{film}}</span></li>
             </ul>
           </li>
         </ul>
@@ -65,20 +65,25 @@ export default {
   data() {
     return {
       img: closeBtn,
-      show: false
+      show: false,
+      people: '',
     };
   },
   methods: {
     close: function(){
       bus.$emit('showCom', false);
       bus.$emit('blurWrap', '');
+      this.people = '';
     }
   },
   created(){
     bus.$on('show', data => {
         this.show = data;
-    })
-  }
+    });
+    bus.$on('add', data =>{
+     this.people = data
+    });
+  },
 };
 </script>
 
@@ -100,7 +105,7 @@ export default {
   flex-direction: column;
   position: relative;
   width: 800px;
-  height: 492px;
+  height: 550px;
   background: #1a1a1a;
   border-radius: 8px;
   margin: 0 auto;
@@ -143,12 +148,22 @@ export default {
         left: 80px;
         border-radius: 50%;
         background: #BB86FC;
+        img{
+          display: block;
+          position: relative;
+          width: 80px;
+          height: 80px;
+          left: 80px;
+          left: 0;
+          border-radius: 50%;
+          background: #BB86FC;
+        }
       }
       li:nth-child(2){
         display: flex;
         flex-direction: row;
         position: relative;
-        width: 100px;
+        width: auto;
         height: 28px;
         margin-left: 96px;
         span{
@@ -179,8 +194,8 @@ export default {
     flex-direction: row;
     position: relative;
     width: 640px;
-    height: 103px;
-    margin: 71px auto 76px auto;
+    height: 200px;
+    margin: 41px auto 76px auto;
     .firstPart,
     .secondPart{
       display: flex;
@@ -188,7 +203,7 @@ export default {
       justify-content: space-between;
       position: relative;
       width: 38%;
-      height: 100%;
+      height: 103px;
       padding-left: 1%;
       &>li{
         display: block;
@@ -205,18 +220,32 @@ export default {
       }
     }
     .secondPart{
-      width: 54.5%;
+      width: 58.5%;
+      height: auto;
       justify-content: flex-start;
       &>li{
-        margin-left: 10%;
+        margin-left: 4%;
         width: 90%;
       }
-       &>li:first-child{
-        margin-bottom: 20px;
-       }
        .desc{
         width: 56%;
-        margin: 0 0 0 auto;
+        margin: 0 2% 0 auto;
+       }
+       &>li:last-child{
+        margin-top: 20px;
+        height: auto;
+          ul{
+            width: 106.5%;
+            &>.desc{
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+              position: relative;
+              width: 62%;
+              margin-left: 20%;
+              margin-right: 0;
+            }
+          }
        }
     }
     .img{

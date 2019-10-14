@@ -6,7 +6,7 @@
 		</div>
 		<nav>
 			<ul>
-				<li v-for='people in comm' :key='people.id' @click = 'descript'><span>{{people.name}}</span>
+				<li v-for='people in comm' :key='people.id' @click = 'descript(people)'><span>{{people.name}}</span>
 					<ul>
 						<li><img v-bind:src="people.img"/></li>
 						<li>{{people.specie}}</li>
@@ -19,6 +19,7 @@
 
 <script>
 import {bus} from '../../../main.js'
+import {axios} from '../../../main.js'
 
 import luke_skywalker  from '../../../assets/common/peoples/luke_skywalker.jpg';
 import c_3po  from '../../../assets/common/peoples/c_3po.jpg';
@@ -53,16 +54,41 @@ export default {
 	    	searchImg: search,
 	    	search: '',
 	    	show: false,
+	    	person:[]
     };
   },
   methods: {
-  	descript: function(){
+  	descript: function(people){
+  		let obj = {};
+  		let arr = [];
   		if(this.show == false){
   			bus.$emit('show', true);
   			bus.$emit('blur', 'blur(5px)');
   			document.querySelector('body').style.overflowY = 'hidden';
-  			document.querySelector('body').style.width = '100%'
-  		}
+  			document.querySelector('body').style.width = '100%';
+  			obj = {
+  				name: people.name,
+  				image: people.img,
+  				birth: people.birth_year,
+  				specie: people.specie,
+  				gender: people.gender,
+  				home: people.homeworld,
+  				film: '',
+  				planet: ''
+
+  			}
+  			axios.get(people.homeworld).then(responsive => {
+  				obj.planet = responsive.data.name
+  			})
+  			for(let i = 0; i < people.films.length; i++){
+  				axios.get(people.films[i]).then(responsive => {
+  					arr.push(responsive.data.title)
+  				})
+  			}
+  			obj.film = arr
+  			this.person.push(obj)
+  			bus.$emit('add', this.person)
+  		}	
   	}
   },
   created(){
@@ -73,7 +99,7 @@ export default {
 		this.species = c.map(item => {
   			return {
   				specie : item.name,
-  				key: item.url
+  				key: item.url,
   			}
   		})
 	})
@@ -97,6 +123,9 @@ export default {
   						}
   					}
   			}
+  		for(let i = 0; i< this.comm.length; i++){
+  			this.comm[i].click = false;
+  		}
   	});
   	bus.$on('showCom', data => {
   		this.show = data;
@@ -109,7 +138,8 @@ export default {
           let newDelta = parseFloat(delta.toFixed(16), 10);
           body.style.width = (100+newDelta)+'%';
           body.style.overflowX = 'hidden';
-        }
+        };
+        this.person = [];
   		bus.$emit('show', false);
   	})
   },
