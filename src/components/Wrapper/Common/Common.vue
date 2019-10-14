@@ -6,7 +6,7 @@
 		</div>
 		<nav>
 			<ul>
-				<li v-for='people in comm' :key='people.id' @click = 'descript(people)'><span>{{people.name}}</span>
+				<li v-for='people in filterHeroes' :key='people.id' @click = 'descript(people)'><span>{{people.name}}</span>
 					<ul>
 						<li><img v-bind:src="people.img"/></li>
 						<li>{{people.specie}}</li>
@@ -89,6 +89,13 @@ export default {
   			this.person.push(obj)
   			bus.$emit('add', this.person)
   		}	
+  	}
+  },
+  computed: {
+  	filterHeroes: function(){
+  		return this.comm.filter(hero => {
+  			return hero.name.match(this.search);
+  		})
   	}
   },
   created(){
