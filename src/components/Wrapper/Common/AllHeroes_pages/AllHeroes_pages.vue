@@ -115,30 +115,32 @@ export default {
   		  		})
   			})
   		  	};
-  		  	this.$http.get('https://swapi.co/api/people/?page='+this.id).then(response => {
-  		  		this.peoples = response.body.results;
-  		  		console.log(response)	
-  		  		let common = [];
-  		  		for(let i = 0; i < this.peoples.length; i++){
-  		  			for(let k = 0; k < this.images.length; k++){
-  		  				if(i === k){
-  		  					common.push(Object.assign(this.peoples[i],this.images[k]));
-  		  				}
-  		  			};
-  		  		};
-  		  		this.comm = common;
-  		  		for(let j = 0; j < this.comm.length; j++){
-  		  			this.comm[j].specie = '';
-  		  					for(let k = 0; k < this.species.length; k++){
-  		  						if(this.comm[j].species[0] === this.species[k].key){
-  		  							this.comm[j].specie = this.species[k].specie;
-  		  						}
+
+  		  		this.$http.get('https://swapi.co/api/people/?page='+this.id).then(response => {
+  		  			this.peoples = response.body.results;
+  		  			console.log(response)	
+  		  			let common = [];
+  		  			for(let i = 0; i < this.peoples.length; i++){
+  		  				for(let k = 0; k < this.images.length; k++){
+  		  					if(i === k){
+  		  						common.push(Object.assign(this.peoples[i],this.images[k]));
   		  					}
+  		  				};
+  		  			};
+  		  			this.comm = common;
+  		  			for(let j = 0; j < this.comm.length; j++){
+  		  				this.comm[j].specie = '';
+  		  						for(let k = 0; k < this.species.length; k++){
+  		  							if(this.comm[j].species[0] === this.species[k].key){
+  		  								this.comm[j].specie = this.species[k].specie;
+  		  							}
+  		  						}
+  		  				}
+  		  			for(let k = 0; k< this.comm.length; k++){
+  		  				this.comm[k].click = false;
   		  			}
-  		  		for(let i = 0; i< this.comm.length; i++){
-  		  			this.comm[i].click = false;
-  		  		}
-  		  	});
+  		  		});
+  	
   		  	bus.$on('showCom', data => {
   		  		this.show = data;
   		  		document.querySelector('body').style.overflowY = 'auto';

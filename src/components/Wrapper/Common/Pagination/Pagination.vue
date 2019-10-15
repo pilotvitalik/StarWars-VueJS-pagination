@@ -1,6 +1,7 @@
 <template>
 	<div id='pagination'>
 		<div>
+      <button><router-link :to="'/'">1</router-link></button>
 			<button v-for='page in pages' @click='num(page)'><router-link :to="'/'+page">{{page}}</router-link></button>
 		</div>
 	</div>
@@ -24,7 +25,7 @@ export default {
   created(){
   	axios.get('https://swapi.co/api/people/').then(responsive =>{
   		let page = Math.round(responsive.data.count/10)
-  		for(let i = 1; i < page+1; i++){
+  		for(let i = 2; i < page+1; i++){
   			this.pages.push(i)
   		}
   	})
