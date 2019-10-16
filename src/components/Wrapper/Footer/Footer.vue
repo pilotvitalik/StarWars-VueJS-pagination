@@ -22,18 +22,25 @@ export default {
 	justify-content: center;
 	align-items: center;
 	width: 100%;
-	height: 120px;
 	background: #1a1a1a;
+	border: none;
 	h3{
 		display: inline-block;
 		position: relative;
 		color: #fff;
 		font-family: 'Roboto',sans-serif;
 		font-weight: bold;
-		font-size: 18px;
-		line-height: 21px;
-		letter-spacing: 0.11em;
 		text-transform: uppercase;
+	}
+}
+@media(min-width: 768px){
+	#footer{
+		height: 120px;
+		h3{
+			font-size: 18px;
+			line-height: 21px;
+			letter-spacing: 0.11em;
+		}
 	}
 }
 </style>

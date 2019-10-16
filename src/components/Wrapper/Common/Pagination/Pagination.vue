@@ -1,6 +1,6 @@
 <template>
 	<div id='pagination'>
-		<div>
+		<div class='left'>
 			<button v-for='page in pages' @click='num(page.page)' :class="{active: page.isActive}">{{page.page}}</button>
 		</div>
 	</div>
@@ -68,28 +68,20 @@ export default {
 #pagination{
   background: #333;
   border: none;
-  padding-bottom: 20px;
   &>div{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
     position: relative;
-    width: 500px;
-    height: 40px;
     margin: 0 auto;
     button{
       display: inline-block;
       position: relative;
-      width: 40px;
-      height: 40px;
       border: none;
       background: #808080;
-      border-radius: 4px;
-      box-shadow: inset 0 5px 10px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.5);
       outline: none;
-      font-size: 20px;
       text-align: center;
-      line-height: 40px;
       color: #565656;
     }
     .active,
@@ -101,6 +93,22 @@ export default {
                      0 0 20px rgb(255,224,27),
                      0 0 20px rgb(255,224,27),
                      0 0 20px rgb(255,224,27);
+    }
+  }
+}
+@media(min-width: 768px){
+  #pagination{
+    &>div{
+      width: 500px;
+      height: 60px;
+      button{
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+        box-shadow: inset 0 5px 10px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.5);
+        font-size: 20px;
+        line-height: 40px;
+      }
     }
   }
 }

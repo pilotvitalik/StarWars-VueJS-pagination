@@ -31,6 +31,7 @@ header{
 	width: 100%;
 	max-width: 100%;
 	overflow: hidden;
+	border: none;
 	div:first-child{
 		position: relative;
 		width: 100%;

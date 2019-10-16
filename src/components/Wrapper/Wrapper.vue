@@ -42,4 +42,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
+#wrapper{
+  border: none;
+}
 </style>

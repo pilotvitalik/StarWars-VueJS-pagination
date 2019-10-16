@@ -20,4 +20,7 @@ export default {
 
 
 <style lang='less' scoped>
+#common{
+	border: none;
+}
 </style>

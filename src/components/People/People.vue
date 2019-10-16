@@ -104,34 +104,25 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 800px;
-  height: 550px;
   background: #1a1a1a;
-  border-radius: 8px;
   margin: 0 auto;
   .close{
     display: block;
     position: relative;
     width: 100%;
-    height: 40px;
     img{
       display: block;
       position: relative;
-      width: 12px;
-      height: 12px;
-      top: 22px;
-      margin: 0 22px 0 auto;
     }
     img:hover{
       cursor: pointer;
     }
   }
-  .name{
+.name{
     display: flex;
     flex-direction: column;
     position: relative;
     width: 100%;
-    height: 200px;
     ul{
       display: flex;
       flex-direction: row;
@@ -139,24 +130,16 @@ export default {
       align-items: center;
       position: relative;
       width: 100%;
-      height: 198px ;
       li:first-child{
         display: block;
         position: relative;
-        width: 80px;
-        height: 80px;
-        left: 80px;
         border-radius: 50%;
         background: #BB86FC;
         img{
           display: block;
           position: relative;
-          width: 80px;
-          height: 80px;
-          left: 80px;
-          left: 0;
-          border-radius: 50%;
           background: #BB86FC;
+          border-radius: 50%;
         }
       }
       li:nth-child(2){
@@ -164,8 +147,6 @@ export default {
         flex-direction: row;
         position: relative;
         width: auto;
-        height: 28px;
-        margin-left: 96px;
         span{
           display: inline-block;
           position: relative;
@@ -174,8 +155,6 @@ export default {
           margin: 0;
           font-family: 'Roboto', sans-serif;
           font-weight: bold;
-          font-size: 24px;
-          line-height: 28px;
           color: #fff;
         }
       }
@@ -183,33 +162,24 @@ export default {
     &>span{
         display: block;
         position: relative;
-        width: 640px;
-        height: 2px;
         margin: 0 auto;
         background: #808080;
     }
   }
-  .descript{
+.descript{
     display: flex;
     flex-direction: row;
     position: relative;
-    width: 640px;
-    height: 200px;
-    margin: 41px auto 76px auto;
     .firstPart,
     .secondPart{
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      width: 38%;
-      height: 103px;
-      padding-left: 1%;
       &>li{
         display: block;
         position: relative;
         width: 100%;
-        height: 21px;
         ul{
           display: flex;
           flex-direction: row;
@@ -220,29 +190,17 @@ export default {
       }
     }
     .secondPart{
-      width: 58.5%;
       height: auto;
       justify-content: flex-start;
-      &>li{
-        margin-left: 4%;
-        width: 90%;
-      }
-       .desc{
-        width: 56%;
-        margin: 0 2% 0 auto;
-       }
        &>li:last-child{
-        margin-top: 20px;
         height: auto;
           ul{
-            width: 106.5%;
             &>.desc{
               display: flex;
-              flex-direction: column;
+              flex-direction: row;
+              flex-wrap: wrap;
               justify-content: flex-start;
               position: relative;
-              width: 62%;
-              margin-left: 20%;
               margin-right: 0;
             }
           }
@@ -253,13 +211,10 @@ export default {
       flex-direction: column;
       align-items: center;
       position: relative;
-      width: 20px;
       height: 100%;
       img{
         display: block;
         position: relative;
-        width: 20px;
-        height: 20px;
       }
     }
     .nameDesc{
@@ -267,17 +222,13 @@ export default {
       position: relative;
       width: auto;
       height: 100%;
-      margin-left: 11px;
       font-family:'Roboto', sans-serif;
-      font-weight: 18px;
-      line-height: 21px;  
       color: #808080;
     }
     .desc{
       display: flex;
       flex-direction: row;
       position: relative;
-      width: 120px;
       height: 100%;
       margin: 0 0 0 auto;
       span{
@@ -287,9 +238,251 @@ export default {
         height: 100%;
         font-family: 'Roboto', sans-serif;
         font-weight: bold;
-        font-size: 18px;
-        line-height: 21px;
         color: #fff;
+      }
+    }
+  }
+}
+@media(min-width: 1150px){
+  .content{
+    width: 800*100/1440%;
+    height: 492px;
+    border-radius: 8px;
+    .close{
+      height: 40px;
+      img{
+        width: 12px;
+        height: 12px;
+        top: 22px;
+        margin: 0 22px 0 auto;
+      }
+    }
+    .name{
+      height: 200px;
+      ul{
+        height: 198px;
+        li:first-child{
+          width: 80px;
+          height: 80px;
+          left: 80px;
+          img{
+            width: 80px;
+            height: 80px;
+          }
+        }
+        li:nth-child(2){
+          height: 28px;
+          margin-left: 96px;
+          span{
+            font-size: 24px;
+            line-height: 28px;
+          }
+        }
+      }
+      &>span{
+          width: 640*100/800%;
+          height: 2px;
+      }
+    }
+    .descript{
+      width: 640*100/800%;
+      height: 103px;
+      margin: 41px auto 76px auto;
+      .firstPart,
+      .secondPart{
+        width: 252*100/640%;
+        height: 103px;
+        padding-left: 1%;
+      }
+      .firstPart{
+        &>li{
+          ul{
+              li:nth-child(2){
+                width: 77px;
+              }
+              li:last-child{
+                width: auto;
+                margin-left: 20px;
+              }
+            }
+          }
+      }
+      .secondPart{
+        width: 365*100/640%;
+        &>li:first-child{
+          &>ul{
+            li:first-child{
+                width: 20px;
+            }
+            li:nth-child(2){
+              width: 92px;
+              margin-right: 24px;
+            }
+          }
+         }
+         .desc{
+          width: 56%;
+          margin: 0;
+         }
+         &>li:last-child{
+          margin-top: 20px;
+          width:  303px;
+            &>ul{
+              width: 121%;
+              li:nth-child(2){
+                width: 44px;
+              }
+              .desc{
+                width: auto;
+                margin-left: 72px;
+                span{
+                  height: 21px;
+                  margin-bottom: 5px;
+                }
+              }
+            }
+         }
+      }
+      .img{
+        width: 20px;
+        img{
+          width: 20px;
+          height: 20px;
+        }
+      }
+      .nameDesc{
+        margin-left: 11px;
+        font-size: 18px;
+        line-height: 21px;  
+      }
+      .desc{
+        width: 120px;
+        span{
+          font-size: 18px;
+          line-height: 21px;
+        }
+      }
+    }
+  }
+}
+@media(min-width: 768px) and (max-width: 1149px){
+  .content{
+    width: 1250*100/1440%;
+    height: 492px;
+    border-radius: 8px;
+    .close{
+      height: 40px;
+      img{
+        width: 12px;
+        height: 12px;
+        top: 22px;
+        margin: 0 22px 0 auto;
+      }
+    }
+    .name{
+      height: 200px;
+      ul{
+        height: 198px;
+        li:first-child{
+          width: 80px;
+          height: 80px;
+          left: 80px;
+          img{
+            width: 80px;
+            height: 80px;
+          }
+        }
+        li:nth-child(2){
+          height: 28px;
+          margin-left: 96px;
+          span{
+            font-size: 24px;
+            line-height: 28px;
+          }
+        }
+      }
+      &>span{
+          width: 700*100/800%;
+          height: 2px;
+      }
+    }
+    .descript{
+      width: 700*100/800%;
+      height: 103px;
+      margin: 41px auto 76px auto;
+      .firstPart,
+      .secondPart{
+        width: 252*100/640%;
+        height: 103px;
+        padding-left: 1%;
+      }
+      .firstPart{
+        &>li{
+          ul{
+              li:nth-child(2){
+                width: 77px;
+              }
+              li:last-child{
+                width: auto;
+                margin-left: 20px;
+              }
+            }
+          }
+      }
+      .secondPart{
+        width: 365*100/640%;
+        &>li:first-child{
+          &>ul{
+            li:first-child{
+                width: 20px;
+            }
+            li:nth-child(2){
+              width: 92px;
+              margin-right: 24px;
+            }
+          }
+         }
+         .desc{
+          width: 56%;
+          margin: 0;
+         }
+         &>li:last-child{
+          margin-top: 20px;
+          width:  303px;
+            &>ul{
+              width: 121%;
+              li:nth-child(2){
+                width: 44px;
+              }
+              .desc{
+                width: auto;
+                margin-left: 72px;
+                span{
+                  height: 21px;
+                  margin-bottom: 5px;
+                }
+              }
+            }
+         }
+      }
+      .img{
+        width: 20px;
+        img{
+          width: 20px;
+          height: 20px;
+        }
+      }
+      .nameDesc{
+        margin-left: 11px;
+        font-size: 18px;
+        line-height: 21px;  
+      }
+      .desc{
+        width: 120px;
+        span{
+          font-size: 18px;
+          line-height: 21px;
+        }
       }
     }
   }
