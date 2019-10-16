@@ -19,13 +19,17 @@
         let withScroll = document.documentElement.clientWidth
         let outScroll = window.innerWidth
         let body = document.querySelector('body')
-        let footer = document.querySelector('#footer>h3')
+        let headerTitle = document.querySelector('#Header>.logo')
+        let left =  document.querySelectorAll('.left')
         if(withScroll < outScroll){
           let delta = (outScroll - withScroll)*100/outScroll;
           let newDelta = parseFloat(delta.toFixed(2), 10);  
           body.style.width = (100+newDelta)+'%';
           body.style.overflowX = 'hidden';
-          footer.style.left = -newDelta+'%';
+          headerTitle.style.marginRight = -newDelta+'%';
+          for(let i = 0; i < left.length; i++){
+            left[i].style.left = -newDelta+'%';
+          }
         }
       }
       document.addEventListener('DOMContentLoaded', start);

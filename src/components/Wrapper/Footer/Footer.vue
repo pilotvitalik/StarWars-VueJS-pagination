@@ -1,6 +1,6 @@
 <template>
 	<footer id='footer'>
-		<h3>STAR WARS CHARACTER Encyclopedia, 2019</h3>
+		<h3 class='left'>STAR WARS CHARACTER Encyclopedia, 2019</h3>
 	</footer>
 </template>
 

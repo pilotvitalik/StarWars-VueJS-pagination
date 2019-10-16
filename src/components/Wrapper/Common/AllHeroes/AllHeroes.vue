@@ -1,10 +1,10 @@
 <template>
 	<div id='AllHeroes'>
-		<div class='search'>
+		<div class='search left'>
 			<input type='text' v-model='search' placeholder='Search by name'>
 			<img :src='searchImg'>
 		</div>
-		<nav>
+		<nav class='left'>
 			<ul>
 				<li v-for='people in filterHeroes' :key='people.id' @click = 'descript(people)'><span>{{people.name}}</span>
 					<ul>
@@ -20,6 +20,7 @@
 <script>
 import {bus} from '../../../../main.js'
 import {axios} from '../../../../main.js'
+import {species,peopleCommon} from '../../../../mixins/initialLoad.js'
 
 import luke_skywalker  from '../../../../assets/common/peoples/luke_skywalker.jpg';
 import c_3po  from '../../../../assets/common/peoples/c_3po.jpg';
@@ -55,6 +56,7 @@ export default {
 	    	search: '',
 	    	show: false,
 	    	person:[],
+	    	id: ''
     };
   },
   methods: {
@@ -97,43 +99,62 @@ export default {
   		})
   	}
   },
+  mixins: [species,peopleCommon],
   created(){
-  	let c = [];
-  	for(let i = 0; i < 37; i++){
-  		this.$http.get('https://swapi.co/api/species/' + (i+1) + '/').then(response => {
-		c.push(response.body)
-		this.species = c.map(item => {
-  			return {
-  				specie : item.name,
-  				key: item.url,
-  			}
-  		})
-	})
-  	};
-  	this.$http.get('https://swapi.co/api/people/').then(response => {
-  		this.peoples = response.body.results;	
-  		console.log(response.body)
-  		let common = [];
-  		for(let i = 0; i < this.peoples.length; i++){
-  			for(let k = 0; k < this.images.length; k++){
-  				if(i === k){
-  					common.push(Object.assign(this.peoples[i],this.images[k]));
-  				}
-  			};
-  		};
-  		this.comm = common;
-  		for(let j = 0; j < this.comm.length; j++){
-  			this.comm[j].specie = '';
-  					for(let k = 0; k < this.species.length; k++){
-  						if(this.comm[j].species[0] === this.species[k].key){
-  							this.comm[j].specie = this.species[k].specie;
-  						}
-  					}
-  			}
-  		for(let i = 0; i< this.comm.length; i++){
-  			this.comm[i].click = false;
-  		}
-  	});
+  	bus.$on('nextPage', data => {
+  		this.id = data;
+  		  	this.$nextTick(function() {
+  		  		if(this.id == 1){
+  		  			this.$http.get('https://swapi.co/api/people/').then(response => {
+  		  				this.peoples = response.body.results;	
+  		  				let common = [];
+  		  				for(let i = 0; i < this.peoples.length; i++){
+  		  					for(let k = 0; k < this.images.length; k++){
+  		  						if(i === k){
+  		  							common.push(Object.assign(this.peoples[i],this.images[k]));
+  		  						}
+  		  					};
+  		  				};
+  		  				this.comm = common;
+  		  				for(let j = 0; j < this.comm.length; j++){
+  		  					this.comm[j].specie = '';
+  		  							for(let k = 0; k < this.species.length; k++){
+  		  								if(this.comm[j].species[0] === this.species[k].key){
+  		  									this.comm[j].specie = this.species[k].specie;
+  		  								}
+  		  							}
+  		  					}
+  		  				for(let i = 0; i< this.comm.length; i++){
+  		  					this.comm[i].click = false;
+  		  				}
+  		  			});
+  		  		}else{
+  		  			this.$http.get('https://swapi.co/api/people/?page=' + this.id).then(response => {
+  		  				this.peoples = response.body.results;	
+  		  				let common = [];
+  		  				for(let i = 0; i < this.peoples.length; i++){
+  		  					for(let k = 0; k < this.images.length; k++){
+  		  						if(i === k){
+  		  							common.push(Object.assign(this.peoples[i],this.images[k]));
+  		  						}
+  		  					};
+  		  				};
+  		  				this.comm = common;
+  		  				for(let j = 0; j < this.comm.length; j++){
+  		  					this.comm[j].specie = '';
+  		  							for(let k = 0; k < this.species.length; k++){
+  		  								if(this.comm[j].species[0] === this.species[k].key){
+  		  									this.comm[j].specie = this.species[k].specie;
+  		  								}
+  		  							}
+  		  					}
+  		  				for(let i = 0; i< this.comm.length; i++){
+  		  					this.comm[i].click = false;
+  		  				}
+  		  			});
+   		  		}
+  		  	})
+  	})
   	bus.$on('showCom', data => {
   		this.show = data;
   		document.querySelector('body').style.overflowY = 'auto';
@@ -159,7 +180,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	padding-bottom: 160-32px;
+	padding-bottom: 100-32px;
 	width: 100%;
 	height: auto;
 	background: #333;
