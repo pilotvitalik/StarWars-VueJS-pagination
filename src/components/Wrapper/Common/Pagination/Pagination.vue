@@ -112,4 +112,36 @@ export default {
     }
   }
 }
+@media(min-width: 550px) and (max-width: 767px){
+  #pagination{
+    &>div{
+      width: 500px;
+      height: 60px;
+      button{
+        width: 36px;
+        height: 36px;
+        border-radius: 4px;
+        box-shadow: inset 0 5px 10px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.5);
+        font-size: 18px;
+        line-height: 36px;
+      }
+    }
+  }
+}
+@media(min-width: 320px) and (max-width: 549px){
+  #pagination{
+    &>div{
+      width: 100%;
+      height: 60px;
+      button{
+        width: 25px;
+        height: 25px;
+        border-radius: 4px;
+        box-shadow: inset 0 5px 10px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.5);
+        font-size: 18px;
+        line-height: 25px;
+      }
+    }
+  }
+}
 </style>

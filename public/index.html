@@ -31,6 +31,9 @@
             left[i].style.left = -newDelta+'%';
           }
         }
+        if(outScroll <= 767){
+          body.style.width = outScroll
+        }
       }
       document.addEventListener('DOMContentLoaded', start);
     </script>

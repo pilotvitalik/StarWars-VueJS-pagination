@@ -315,4 +315,59 @@ export default {
 		}
 	}
 }
+@media(min-width: 320px) and (max-width: 767px){
+	#AllHeroes{
+		padding-bottom: 60-24px;
+		width: 100%;
+		.search{
+			width: 272*100/320%;
+			height: 29px;
+			margin: 45px auto 44px auto;
+			input{
+				padding-left: 5px;
+				font-size: 16px;
+				line-height: 19px;
+				border-bottom: 1px solid #808080;
+			}
+			img{
+				top: 0;
+				right: 0;
+			}
+		}
+		nav{
+			width: 272*100/320%;
+			&>ul{
+				&>li{
+					width: 100%;
+					height: 200px;
+					margin-bottom: 24px;
+					border-radius: 8px;
+					box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+						&>span{
+							font-size: 18px;
+							line-height: 21px;
+							top: 123px;
+						}
+						ul{
+							width: 80px;
+							height: 135px;
+							top: 33px;
+							li:first-child{
+								height: 80px;
+							}
+							li:last-child{
+								height: 15px;
+								margin: 0;
+								font-size: 13px;
+								line-height: 15px;
+							}
+						}
+				}
+				&>li:hover{
+					box-shadow: 0 10px 40px rgba(37, 136, 167, 0.38);
+				}
+			}
+		}
+	}
+}
 </style>

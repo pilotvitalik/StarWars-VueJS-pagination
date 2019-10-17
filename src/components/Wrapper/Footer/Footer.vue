@@ -43,4 +43,17 @@ export default {
 		}
 	}
 }
+@media(min-width: 320px) and (max-width: 767px){
+	#footer{
+		height: 104px;
+		h3{
+			width: 200px;
+			height: 35px;
+			font-size: 14px;
+			line-height: 17.5px;
+			letter-spacing: 0.11em;
+			text-align: center;
+		}
+	}
+}
 </style>
