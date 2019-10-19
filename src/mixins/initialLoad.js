@@ -1,6 +1,9 @@
+import {bus} from '../main.js'
+
 export let species = {
 	created(){
 		let c = [];
+    let a = [];
 		  		  	for(let i = 0; i < 37; i++){
 		  		  		this.$http.get('https://swapi.co/api/species/' + (i+1) + '/').then(response => {
 		  				c.push(response.body)
@@ -10,13 +13,18 @@ export let species = {
 		  		  				key: item.url,
 		  		  			}
 		  		  		})
+                a.push(response.status)
+                this.statusSpecie = a.map(item => {
+                  return item
+                })
 		  			})
-		  		  	};
+		  		  	};  
 	}
 }
 
 export let peopleCommon = {
 	created(){
+    let arrPeople = [];
 		this.$http.get('https://swapi.co/api/people/').then(response => {
   		  				this.peoples = response.body.results;	
   		  				let common = [];
@@ -39,6 +47,7 @@ export let peopleCommon = {
   		  				for(let i = 0; i< this.comm.length; i++){
   		  					this.comm[i].click = false;
   		  				}
+                this.statusPeople.push(response.status)
   		  			});
 	}
 }

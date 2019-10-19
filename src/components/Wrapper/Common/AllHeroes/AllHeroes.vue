@@ -20,7 +20,6 @@
 <script>
 import {bus} from '../../../../main.js'
 import {axios} from '../../../../main.js'
-import {species,peopleCommon} from '../../../../mixins/initialLoad.js'
 
 import luke_skywalker  from '../../../../assets/common/peoples/luke_skywalker.png';
 import c_3po  from '../../../../assets/common/peoples/c_3po.png';
@@ -56,7 +55,11 @@ export default {
 	    	search: '',
 	    	show: false,
 	    	person:[],
-	    	id: ''
+	    	id: '',
+	    	request: {
+	    		people: false,
+	    		species: false
+	    	}
     };
   },
   methods: {
@@ -84,6 +87,7 @@ export default {
   			for(let i = 0; i < people.films.length; i++){
   				axios.get(people.films[i]).then(responsive => {
   					arr.push(responsive.data.title)
+  					bus.$emit('sh', false)
   				})
   			}
   			obj.film = arr
@@ -94,13 +98,85 @@ export default {
   },
   computed: {
   	filterHeroes: function(){
-  		return this.comm.filter(hero => {
+  		return this.peoples.filter(hero => {
   			return hero.name.match(this.search);
   		})
   	}
   },
-  mixins: [species,peopleCommon],
   created(){
+  	// Initial loading-------------------------------------------------------- 
+  		let tempArr = [];
+  		let tempSpecie = [];
+  		let statusSpecies = [];
+  		let counter = 0;
+  		this.$http.get('https://swapi.co/api/people/')
+  			.then(response => {
+  					for(let i = 0; i < response.data.results.length; i++){
+  						response.data.results[i].specie = '';
+  						for(let k = 0; k < this.images.length; k++){
+  							if(i == k){
+  								this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
+  							}
+  						}
+  					}
+  					for(let j = 0; j < this.peoples.length; j++){
+  						for(let k = 0; k < this.peoples[j].species.length; k++){
+  							tempSpecie.push(this.peoples[j].species[k])
+  						}
+  					}
+  					for(let str of tempSpecie){
+  						if(!tempArr.includes(str)){
+  							tempArr.push(str)
+  						}
+  					}
+  					tempSpecie = [];
+  					for(let m = 0; m < tempArr.length; m++){
+  						this.$http.get(tempArr[m]).then(response => {
+  							tempSpecie.push(response.body)
+  							this.species = tempSpecie.map(item => {
+  								return {
+  									specie : item.name,
+  									url : item.url
+  								}
+  							})
+  							for(let i = 0; i < this.peoples.length; i++){
+  							  	for(let j = 0; j < this.peoples[i].species.length; j++){
+  							  		for(let d = 0; d < this.species.length; d++){
+  							  			if(this.peoples[i].species[j] == this.species[d].url){
+  							  				this.peoples[i].specie = this.species[d].specie
+  							  				
+  							  			}
+  							  		}
+  							  	}
+  		  					}
+  		  					if(response.ok == true){
+  								counter++
+  							}
+  							if(response.ok == false){
+  								counter
+  							}
+  							if(counter === tempArr.length){
+  								bus.$emit('species', true)
+  							}
+  							if(counter != tempArr.length){
+  								bus.$emit('species', false)
+  							}
+  						}, response => {
+  						console.log('errorSpecie')
+  					})
+  					}
+  						bus.$on('species', data => {
+  							if(data == true){
+  								bus.$emit('people', response.ok)
+  							}
+  						})
+  					}, response => {
+  						console.log('errorPeople')
+  					})	
+  	//----------End initial loading------------------
+  	let a = [];
+  	document.querySelector('body').style.overflowY = 'hidden';
+  	document.querySelector('body').style.pointerEvents = 'none';
   	bus.$on('nextPage', data => {
   		this.id = data;
   		  	this.$nextTick(function() {
@@ -129,6 +205,7 @@ export default {
   		  				}
   		  			});
   		  		}else{
+
   		  			this.$http.get('https://swapi.co/api/people/?page=' + this.id).then(response => {
   		  				this.peoples = response.body.results;	
   		  				let common = [];
@@ -170,6 +247,10 @@ export default {
         this.person = [];
   		bus.$emit('show', false);
   	})
+  	setTimeout((data) => {
+  		  document.querySelector('body').style.overflowY = 'auto';
+  		  document.querySelector('body').style.pointerEvents = 'auto';
+  		}, 1000)  	
   },
 };
 </script>
@@ -369,5 +450,8 @@ export default {
 			}
 		}
 	}
+}
+.display{
+	display: none;
 }
 </style>

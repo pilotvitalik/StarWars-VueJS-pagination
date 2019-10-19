@@ -99,6 +99,7 @@ export default {
   left: 0;
   background: rgba(128, 128, 128, 0.01);
   z-index: 1000;
+  opacity: 1;
 }
 .content{
   display: flex;
