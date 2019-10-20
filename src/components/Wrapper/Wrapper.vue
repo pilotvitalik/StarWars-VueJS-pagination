@@ -12,18 +12,16 @@
 import {bus} from '../../main.js'
 
 import Header from './Header/Header.vue';
-import Common from './Common/Common.vue';
 import Footer from './Footer/Footer.vue';
-import Pagination from './Common/Pagination/Pagination.vue'
-import Preloader from '../Preloader/Preloader.vue'
+import Pagination from './Pagination/Pagination.vue'
+import Preloader from './Preloader/InitialLoading/Preloader.vue'
 
 export default {
   components: {
     appHeader: Header,
-    Common: Common,
     appFooter: Footer,
     Pages: Pagination,
-    Preloader: Preloader
+    Preloader: Preloader,
   },
   data() {
     return {
@@ -53,7 +51,7 @@ export default {
         if(this.request.people == true){
           setTimeout(() => {
             this.isShow = false
-          }, 2000)
+          }, 1650)
         }
       })
     })

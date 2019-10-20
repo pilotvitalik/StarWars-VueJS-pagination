@@ -1,6 +1,6 @@
 <template>
-	<transition name='preloader'>
-	<div id='preloader'  :class="{'preloader-leave-active': isAnimate}">
+	<transition name='initialLoading'>
+	<div id='initialLoading'  :class="{'preloader-leave-active': isAnimate}">
 		<div class='loader'>
 			<span>Loading...</span>
 		</div>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {bus} from '../../main.js'
+import {bus} from '../../../../main.js'
 
 export default{
 	data(){
@@ -32,14 +32,12 @@ export default{
 			})
 		})
 	},
-	beforeDestroy(){
+	destroyed(){
 		let withScroll = document.documentElement.clientWidth
 		let outScroll = window.innerWidth
 		let body = document.querySelector('body')
 		let headerTitle = document.querySelector('#Header>.logo')
 		let left =  document.querySelectorAll('.left')
-		console.log(withScroll)
-		console.log(outScroll)
 		if(withScroll < outScroll){
 		  let delta = (outScroll - withScroll)*100/outScroll;
 		  let newDelta = parseFloat(delta.toFixed(2), 10);  
@@ -58,7 +56,7 @@ export default{
 </script>
 
 <style lang='less'>
-#preloader{
+#initialLoading{
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -121,8 +119,8 @@ export default{
 		transform: rotate(-360deg);
 	}
 }
-.preloader-leave-active{
-	animation: stop 3s ease;
+.initialLoading-leave-active{
+	animation: stop 1s linear;
 }
 @keyframes stop{
 	from{

@@ -7,18 +7,21 @@
 </template>
 
 <script>
-import {bus} from '../../../../main.js'
-import {axios} from '../../../../main.js'
+import {bus} from '../../../main.js'
+import {axios} from '../../../main.js'
 
 export default {
   data() {
     return {
 	    	pages: [],
+        click: false
     };
   },
   methods: {
   	num: function(page){
   		bus.$emit('nextPage', page)
+      this.click = true;
+      bus.$emit('loadPage', this.click)
      for(let i = 0; i < this.pages.length; i++){
         if(page-1 === i){
           this.pages[i].isActive = true
