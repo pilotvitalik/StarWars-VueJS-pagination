@@ -21,14 +21,14 @@
         let body = document.querySelector('body')
         let headerTitle = document.querySelector('#Header>.logo')
         let left =  document.querySelectorAll('.left')
-        if(withScroll < outScroll){
+        if(withScroll == outScroll){
           let delta = (outScroll - withScroll)*100/outScroll;
           let newDelta = parseFloat(delta.toFixed(2), 10);  
           body.style.width = (100+newDelta)+'%';
           body.style.overflowX = 'hidden';
-          headerTitle.style.marginRight = -newDelta+'%';
+          headerTitle.style.marginRight = '-1.1%';
           for(let i = 0; i < left.length; i++){
-            left[i].style.left = -newDelta+'%';
+            left[i].style.left = '1.1%';
           }
         }
         if(outScroll <= 767){

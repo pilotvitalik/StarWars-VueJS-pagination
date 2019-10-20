@@ -58,7 +58,6 @@ export default {
 	    	id: '',
 	    	request: {
 	    		people: false,
-	    		species: false
 	    	}
     };
   },
@@ -104,6 +103,8 @@ export default {
   	}
   },
   created(){
+  	document.querySelector('body').style.overflowY = 'hidden';
+  	document.querySelector('body').style.pointerEvents = 'none';
   	//----------Initial loading---------------------------------------------- 
   		let tempArr = [];
   		let tempSpecie = [];
@@ -167,6 +168,12 @@ export default {
   					}
   						bus.$on('species', data => {
   							if(data == true){
+  								if(response.ok == true){
+  									setTimeout(() => {
+  										  document.querySelector('body').style.overflowY = 'auto';
+  										  document.querySelector('body').style.pointerEvents = 'auto';
+  										}, 2000)
+  								}
   								bus.$emit('people', response.ok)
   							}
   						})
@@ -175,8 +182,6 @@ export default {
   					})	
   	//----------End initial loading------------------
   	let a = [];
-  	document.querySelector('body').style.overflowY = 'hidden';
-  	document.querySelector('body').style.pointerEvents = 'none';
   	bus.$on('nextPage', data => {
   		this.id = data;
   		  	this.$nextTick(function() {
@@ -323,6 +328,26 @@ export default {
    		  		}
   		  	})
   	})
+	let withScroll = document.documentElement.clientWidth
+	let outScroll = window.innerWidth
+	let body = document.querySelector('body')
+	let headerTitle = document.querySelector('#Header>.logo')
+	let left =  document.querySelectorAll('.left')
+	console.log(withScroll)
+	console.log(outScroll)
+	if(withScroll < outScroll){
+	  let delta = (outScroll - withScroll)*100/outScroll;
+	  let newDelta = parseFloat(delta.toFixed(2), 10);  
+	  body.style.width = (100+newDelta)+'%';
+	  body.style.overflowX = 'hidden';
+	  headerTitle.style.marginRight = -newDelta+'%';
+	  for(let i = 0; i < left.length; i++){
+	    left[i].style.left = newDelta+'%';
+	  }
+	}
+	if(outScroll <= 767){
+	  body.style.width = outScroll
+	}
   	bus.$on('showCom', data => {
   		this.show = data;
   		document.querySelector('body').style.overflowY = 'auto';
@@ -337,11 +362,7 @@ export default {
         };
         this.person = [];
   		bus.$emit('show', false);
-  	})
-  	setTimeout((data) => {
-  		  document.querySelector('body').style.overflowY = 'auto';
-  		  document.querySelector('body').style.pointerEvents = 'auto';
-  		}, 1000)  	
+  	})	
   },
 };
 </script>
