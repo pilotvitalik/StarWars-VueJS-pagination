@@ -88,15 +88,15 @@ export default {
   				planet: '',
   			}
   			axios.get(people.homeworld).then(responsive => {
-  				obj.planet = responsive.data.name
+  				bus.$emit('planet', responsive.data.name)
   			})
   			for(let i = 0; i < people.films.length; i++){
   				axios.get(people.films[i]).then(responsive => {
   					arr.push(responsive.data.title)
+            bus.$emit('films', arr)
   					bus.$emit('sh', false)
   				})
   			}
-  			obj.film = arr
   			this.person.push(obj)
   			bus.$emit('add', this.person)
   		}	
@@ -186,6 +186,7 @@ export default {
   						})
   					}, response => {
   						console.log('errorPeople')
+              console.log(response)
   					})	
   	//----------End initial loading------------------
   	let a = [];

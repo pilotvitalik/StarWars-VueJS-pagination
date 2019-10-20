@@ -40,14 +40,24 @@
             <ul>
               <li class='img'><img src='../../assets/common/world.svg'></li>
               <li class='nameDesc'>Homeworld</li>
-              <li class='desc'><span>{{people[0].planet}}</span></li>
+              <transition>
+              <PersonLoading v-if='this.showPersonLoading.home'></PersonLoading>
+              </transition>
+              <li class='desc' v-if='!this.showPersonLoading.home'>
+                <span>{{people[0].planet}}</span>
+              </li>
             </ul>
           </li>
           <li>
             <ul>
               <li class='img'><img src='../../assets/common/film.svg'></li>
               <li class='nameDesc'>Films</li>
-              <li class='desc'><span v-for='film in people[0].film' :key='film.id'>{{film}}</span></li>
+              <transition>
+                <PersonLoading  v-if='this.showPersonLoading.film'></PersonLoading>
+              </transition>
+              <li class='desc'  v-if='!this.showPersonLoading.film' >
+                 <span v-for='film in people[0].film' :key='film.id'>{{film}}</span>
+              </li>
             </ul>
           </li>
         </ul>
@@ -60,13 +70,21 @@
 import {bus} from '../../main.js'
 
 import closeBtn from '../../assets/common/closeBtn.png'
+import PersonLoading from '../Wrapper/Preloader/PersonLoading/personLoading.vue'
 
 export default {
+  components:{
+    PersonLoading: PersonLoading,
+  },
   data() {
     return {
       img: closeBtn,
       show: false,
       people: '',
+      showPersonLoading: {
+        home: true,
+        film: true
+      }
     };
   },
   methods: {
@@ -74,6 +92,8 @@ export default {
       bus.$emit('showCom', false);
       bus.$emit('blurWrap', '');
       this.people = '';
+      this.showPersonLoading.film = false;
+      this.showPersonLoading.home = false;
     }
   },
   created(){
@@ -81,13 +101,40 @@ export default {
         this.show = data;
     });
     bus.$on('add', data =>{
-     this.people = data
+     this.people = data;
+     this.$nextTick(() => {
+     this.showPersonLoading.home = true;
+     this.showPersonLoading.film = true;
+     })
     });
+    bus.$on('planet', data => {
+          if(data != null){
+            setTimeout(() => {
+              this.showPersonLoading.home = false;
+              this.people[0].planet = data
+            }, 1500)
+          }
+      })
+    bus.$on('films', data => {
+          if(data != null){
+            setTimeout(() => {
+              this.showPersonLoading.film = false;
+              this.people[0].film = data;
+              console.log(data)
+            }, 1500)
+          }
+      })
   },
 };
 </script>
 
 <style lang='less' scoped>
+.v-enter-active, .v-leave-active{
+  transition: opacity .3s ease;
+}
+.v-enter, .v-leave-to{
+  opacity: 0;
+}
 #people{
   display: flex;
   flex-direction: row;
