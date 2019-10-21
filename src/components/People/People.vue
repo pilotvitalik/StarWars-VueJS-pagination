@@ -53,7 +53,7 @@
               <li class='img'><img src='../../assets/common/film.svg'></li>
               <li class='nameDesc'>Films</li>
               <transition>
-                <PersonLoading  v-if='this.showPersonLoading.film'></PersonLoading>
+                <PersonLoading  v-if='this.showPersonLoading.film' :class="{mobile: showPersonLoading.mobile}"></PersonLoading>
               </transition>
               <li class='desc'  v-if='!this.showPersonLoading.film' >
                  <span v-for='film in people[0].film' :key='film.id'>{{film}}</span>
@@ -83,7 +83,8 @@ export default {
       people: '',
       showPersonLoading: {
         home: true,
-        film: true
+        film: true,
+        mobile: false
       }
     };
   },
@@ -97,6 +98,9 @@ export default {
     }
   },
   created(){
+    if(document.documentElement.clientWidth <= 549){
+      this.showPersonLoading.mobile = true
+    }
     bus.$on('show', data => {
         this.show = data;
     });
@@ -108,21 +112,21 @@ export default {
      })
     });
     bus.$on('planet', data => {
-          if(data != null){
-            setTimeout(() => {
+      setTimeout(() => {
               this.showPersonLoading.home = false;
-              this.people[0].planet = data
             }, 1500)
-          }
+            setTimeout(() => {
+              this.people[0].planet = data
+            }, 1800)
       })
     bus.$on('films', data => {
-          if(data != null){
-            setTimeout(() => {
+      setTimeout(() => {
               this.showPersonLoading.film = false;
+            }, 1500)
+            setTimeout(() => {
               this.people[0].film = data;
               console.log(data)
-            }, 1500)
-          }
+            }, 1800)
       })
   },
 };

@@ -22,7 +22,6 @@ export default{
 #personLoading{
 	display: flex;
 	position: absolute;
-	width: 189px;
 	z-index: 2000;
 	li{
 		list-style: none;
@@ -30,6 +29,7 @@ export default{
 		height: 10px;
 		background: #fff;
 		margin: 0 4px;
+		margin-top: 5.5px;
 		animation: animate .5s infinite alternate;
 	}
 	li:first-child{
@@ -67,10 +67,29 @@ export default{
 }
 @media(min-width: 1150px){
 	#personLoading{
+		width: 189px;
 		padding-left: 144px;
-		li{
-			margin-top: 5.5px
-		}
+	}
+}
+@media(min-width: 768px) and (max-width: 1149px){
+	#personLoading{
+		width: 190px;
+		padding-left: 143px;
+	}
+}
+@media(min-width: 550px) and (max-width: 767px){
+	#personLoading{
+		width: 199px;
+		padding-left: 134px;
+	}
+}
+@media(min-width: 320px) and (max-width: 549px){
+	#personLoading{
+		width: 100px;
+		padding-left: 134px;
+	}
+		.mobile{
+		padding-left: 108px !important;
 	}
 }
 </style>

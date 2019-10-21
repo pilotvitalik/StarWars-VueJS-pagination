@@ -32,26 +32,6 @@ export default{
 			})
 		})
 	},
-	destroyed(){
-		let withScroll = document.documentElement.clientWidth
-		let outScroll = window.innerWidth
-		let body = document.querySelector('body')
-		let headerTitle = document.querySelector('#Header>.logo')
-		let left =  document.querySelectorAll('.left')
-		if(withScroll < outScroll){
-		  let delta = (outScroll - withScroll)*100/outScroll;
-		  let newDelta = parseFloat(delta.toFixed(2), 10);  
-		  body.style.width = (100+newDelta)+'%';
-		  body.style.overflowX = 'hidden';
-		  headerTitle.style.marginRight = -newDelta+'%';
-		  for(let i = 0; i < left.length; i++){
-		    left[i].style.left = newDelta+'%';
-		  }
-		}
-		if(outScroll <= 767){
-		  body.style.width = outScroll
-		}
-	},
 }
 </script>
 
@@ -120,7 +100,7 @@ export default{
 	}
 }
 .initialLoading-leave-active{
-	animation: stop 1s linear;
+	animation: stop 2s linear;
 }
 @keyframes stop{
 	from{

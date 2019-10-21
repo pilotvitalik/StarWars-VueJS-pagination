@@ -87,14 +87,18 @@ export default {
   				film: '',
   				planet: '',
   			}
-  			axios.get(people.homeworld).then(responsive => {
-  				bus.$emit('planet', responsive.data.name)
+  			this.$http.get(people.homeworld).then(responsive => {
+          if(responsive.ok == true){
+            bus.$emit('planet', responsive.data.name)
+          }
   			})
   			for(let i = 0; i < people.films.length; i++){
-  				axios.get(people.films[i]).then(responsive => {
-  					arr.push(responsive.data.title)
-            bus.$emit('films', arr)
+  				this.$http.get(people.films[i]).then(responsive => {
   					bus.$emit('sh', false)
+            if(responsive.ok == true){
+              arr.push(responsive.data.title)
+              bus.$emit('films', arr)
+            }
   				})
   			}
   			this.person.push(obj)
@@ -176,10 +180,30 @@ export default {
   						bus.$on('species', data => {
   							if(data == true){
   								if(response.ok == true){
-  									setTimeout(() => {
+  									setTimeout(() => { 
   										  document.querySelector('body').style.overflowY = 'auto';
   										  document.querySelector('body').style.pointerEvents = 'auto';
-  										}, 2500)
+  										}, 980)
+                    setTimeout(() => {
+                      let withScroll = document.documentElement.clientWidth
+                      let outScroll = window.innerWidth
+                      let body = document.querySelector('body')
+                      let headerTitle = document.querySelector('#Header>.logo')
+                      let left =  document.querySelectorAll('.left')
+                      if(withScroll < outScroll){
+                        let delta = (outScroll - withScroll)*100/outScroll;
+                        let newDelta = parseFloat(delta.toFixed(2), 10);  
+                        body.style.width = (100+newDelta)+'%';
+                        body.style.overflowX = 'hidden';
+                        headerTitle.style.marginRight = '-1.1%'
+                        for(let i = 0; i < left.length; i++){
+                          left[i].style.left = -newDelta+'%';
+                        }
+                      }
+                      if(outScroll <= 767){
+                        body.style.width = outScroll
+                      }
+                    }, 990)
   								}
   								bus.$emit('people', response.ok)
   							}
