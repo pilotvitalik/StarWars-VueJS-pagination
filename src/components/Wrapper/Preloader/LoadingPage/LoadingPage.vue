@@ -16,10 +16,26 @@ export default{
 		}
 	},
 	created(){
-		document.querySelector('body').style.overflowY = 'hidden';
-	},
-	destroyed(){
-		document.querySelector('body').style.overflowY = 'auto';
+		let withScroll = document.documentElement.clientWidth
+		let outScroll = window.innerWidth
+		let body = document.querySelector('body')
+		let headerTitle = document.querySelector('#Header>.logo')
+		let left =  document.querySelectorAll('.left')
+		let padding = document.querySelector('.padding');
+		let pagination = document.querySelector('#pagination>.left');
+		if(withScroll < outScroll){
+		  let delta = (outScroll - withScroll)*100/outScroll;
+		  let newDelta = parseFloat(delta.toFixed(2), 10);  
+		  body.style.width = (100+newDelta)+'%';
+		  body.style.overflowX = 'hidden';
+		  for(let i = 0; i < left.length; i++){
+		    left[i].style.paddingLeft = '560px';
+		  }
+		  pagination.style.marginRight = '50px !important';
+		}
+		if(outScroll <= 767){
+		  body.style.width = outScroll
+		}
 	}
 }
 </script>

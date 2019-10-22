@@ -4,16 +4,19 @@
 			<input type='text' v-model='search' placeholder='Search by name'>
 			<img :src='searchImg'>
 		</div>
-		<nav class='left'>
+    <transition name='slide-fade' type='transition'>
+		<nav class='left'  v-if='isAnimation'>
 			<ul>
-				<li v-for='people in filterHeroes' :key='people.id' @click = 'descript(people)'><span>{{people.name}}</span>
-					<ul>
+				<li v-for='people in filterHeroes' :key='people.name' @click = 'descript(people)'>
+          <span :class="{notDisplay: isnotDisplay, view: displayCarts}">{{people.name}}</span>
+					<ul :class="{notDisplay: isnotDisplay, view: displayCarts}">
 						<li><img v-bind:src="people.img"/></li>
 						<li>{{people.specie}}</li>
 					</ul>
 				</li>
 			</ul>
 		</nav>
+    </transition>
     <LoadingPage v-if='showLoadPage'></LoadingPage>
 	</div>
 </template>
@@ -65,7 +68,10 @@ export default {
 	    	request: {
 	    		people: false,
 	    	},
-        showLoadPage: false
+        showLoadPage: false,
+        isAnimation: false,
+        isnotDisplay: false,
+        displayCarts: false
     };
   },
   methods: {
@@ -181,29 +187,31 @@ export default {
   							if(data == true){
   								if(response.ok == true){
   									setTimeout(() => { 
-  										  document.querySelector('body').style.overflowY = 'auto';
-  										  document.querySelector('body').style.pointerEvents = 'auto';
+                        this.isAnimation = true;
   										}, 980)
                     setTimeout(() => {
-                      let withScroll = document.documentElement.clientWidth
-                      let outScroll = window.innerWidth
-                      let body = document.querySelector('body')
-                      let headerTitle = document.querySelector('#Header>.logo')
-                      let left =  document.querySelectorAll('.left')
-                      if(withScroll < outScroll){
-                        let delta = (outScroll - withScroll)*100/outScroll;
-                        let newDelta = parseFloat(delta.toFixed(2), 10);  
-                        body.style.width = (100+newDelta)+'%';
-                        body.style.overflowX = 'hidden';
-                        headerTitle.style.marginRight = '-1.1%'
-                        for(let i = 0; i < left.length; i++){
-                          left[i].style.left = -newDelta+'%';
+                      document.querySelector('body').style.overflowY = 'auto';
+                      document.querySelector('body').style.pointerEvents = 'auto';
+                        let withScroll = document.documentElement.clientWidth
+                        let outScroll = window.innerWidth
+                        let body = document.querySelector('body')
+                        let headerTitle = document.querySelector('#Header>.logo')
+                        let left =  document.querySelectorAll('.left')
+                        let padding = document.querySelector('.padding');
+                        if(withScroll < outScroll){
+                          let delta = (outScroll - withScroll)*100/outScroll;
+                          let newDelta = parseFloat(delta.toFixed(2), 10);  
+                          body.style.width = (100+newDelta)+'%';
+                          body.style.overflowX = 'hidden';
+                          headerTitle.style.paddingLeft = -newDelta+'%';
+                          for(let i = 0; i < left.length; i++){
+                            left[i].style.paddingLeft = -newDelta+'%';
+                          }
                         }
-                      }
-                      if(outScroll <= 767){
-                        body.style.width = outScroll
-                      }
-                    }, 990)
+                        if(outScroll <= 767){
+                          body.style.width = outScroll
+                        }
+                    }, 3980)
   								}
   								bus.$emit('people', response.ok)
   							}
@@ -213,6 +221,7 @@ export default {
               console.log(response)
   					})	
   	//----------End initial loading------------------
+  //----------Loading other pages-----------------
   	let a = [];
   	bus.$on('nextPage', data => {
   		this.id = data;
@@ -285,7 +294,13 @@ export default {
                           if(response.ok == true){
                             setTimeout(() => {
                               this.showLoadPage = false;
+                              this.displayCarts = true;
                             }, 1000)
+                            setTimeout(() => {
+                              this.isnotDisplay = false;
+                              this.displayCarts = false
+                              document.querySelector('body').style.overflowY = 'auto';
+                            }, 4000)
                           }
   		  								}
   		  							})
@@ -360,7 +375,13 @@ export default {
                           if(response.ok == true){
                             setTimeout(() => {
                               this.showLoadPage = false;
+                              this.displayCarts = true
                             }, 1000)
+                            setTimeout(() => {
+                              this.displayCarts = false
+                              this.isnotDisplay = false;
+                              document.querySelector('body').style.overflowY = 'auto';
+                            }, 4000)
                           }
   		  								}
   		  							})
@@ -370,7 +391,8 @@ export default {
    		  		}
   		  	})
   	})
-	
+  //----------End loading other pages--------------
+	//----------Set width when modal window closed
   	bus.$on('showCom', data => {
   		this.show = data;
   		document.querySelector('body').style.overflowY = 'auto';
@@ -385,17 +407,43 @@ export default {
         };
         this.person = [];
   		bus.$emit('show', false);
-  	})	
+  	})
+  //------------End set width--------------------------	
+  //-----------Animation loading another page
     bus.$on('loadPage', data => {
-      this.showLoadPage = data
-      console.log(data)
+      this.showLoadPage = data;
+      this.isnotDisplay = true;
+      document.querySelector('body').style.overflowY = 'hidden';
+      document.querySelector('body').style.width = '100%';
     })
+  //---------End animation loading
   },
 };
 </script>
 
 
 <style lang='less' scoped>
+.slide-fade-enter-active {
+  transition: all 3s ease;
+}
+.slide-fade-enter{
+  transform: translateY(100px);
+}
+.notDisplay{
+  opacity: 0;
+}
+.view{
+  animation: displayCarts 3s linear forwards;
+}
+@keyframes displayCarts{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
 #AllHeroes{
 	display: flex;
 	flex-direction: column;

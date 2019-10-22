@@ -1,7 +1,7 @@
 <template>
 	<transition name='initialLoading'>
 	<div id='initialLoading'  :class="{'preloader-leave-active': isAnimate}">
-		<div class='loader'>
+		<div class='loader padding'>
 			<span>Loading...</span>
 		</div>
 	</div>
@@ -46,6 +46,7 @@ export default{
 	right: 0;
 	bottom: 0;
 	left: 0;
+	padding-left: -1.1%;
 	background: #34495e;
 	z-index: 1000;
 	opacity: 1;

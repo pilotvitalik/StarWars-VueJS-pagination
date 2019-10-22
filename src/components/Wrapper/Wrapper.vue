@@ -51,7 +51,7 @@ export default {
         if(this.request.people == true){
           setTimeout(() => {
             this.isShow = false
-          }, 1000)
+          }, 980)
         }
       })
     })
