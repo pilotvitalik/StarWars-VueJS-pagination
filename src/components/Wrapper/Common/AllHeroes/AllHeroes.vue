@@ -71,7 +71,8 @@ export default {
         showLoadPage: false,
         isAnimation: false,
         isnotDisplay: false,
-        displayCarts: false
+        displayCarts: false,
+        isNavigation: false
     };
   },
   methods: {
@@ -110,85 +111,263 @@ export default {
   			this.person.push(obj)
   			bus.$emit('add', this.person)
   		}	
-  	}
-  },
-  computed: {
-  	filterHeroes: function(){
-  		return this.peoples.filter(hero => {
-  			return hero.name.match(this.search);
-  		})
-  	}
-  },
-  created(){
-  	document.querySelector('body').style.overflowY = 'hidden';
-  	document.querySelector('body').style.pointerEvents = 'none';
-  	//----------Initial loading---------------------------------------------- 
-  		let tempArr = [];
-  		let tempSpecie = [];
-  		let statusSpecies = [];
-  		let counter = 0;
-  		this.$http.get('https://swapi.co/api/people/')
-  			.then(response => {
-  					for(let i = 0; i < response.data.results.length; i++){
-  						response.data.results[i].specie = '';
-  						for(let k = 0; k < this.images.length; k++){
-  							if(i == k){
-  								this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
-  							}
-  						}
-  					}
-  					for(let j = 0; j < this.peoples.length; j++){
-  						for(let k = 0; k < this.peoples[j].species.length; k++){
-  							tempSpecie.push(this.peoples[j].species[k])
-  						}
-  					}
-  					for(let str of tempSpecie){
-  						if(!tempArr.includes(str)){
-  							tempArr.push(str)
-  						}
-  					}
-  					tempSpecie = [];
-  					for(let m = 0; m < tempArr.length; m++){
-  						this.$http.get(tempArr[m]).then(response => {
-  							tempSpecie.push(response.body)
-  							this.species = tempSpecie.map(item => {
-  								return {
-  									specie : item.name,
-  									url : item.url
-  								}
-  							})
-  							for(let i = 0; i < this.peoples.length; i++){
-  							  	for(let j = 0; j < this.peoples[i].species.length; j++){
-  							  		for(let d = 0; d < this.species.length; d++){
-  							  			if(this.peoples[i].species[j] == this.species[d].url){
-  							  				this.peoples[i].specie = this.species[d].specie
-  							  				
-  							  			}
-  							  		}
-  							  	}
-  		  					}
-  		  					if(response.ok == true){
-  								counter++
-  							}
-  							if(response.ok == false){
-  								counter
-  							}
-  							if(counter === tempArr.length){
-  								bus.$emit('species', true)
-  							}
-  							if(counter != tempArr.length){
-  								bus.$emit('species', false)
-  							}
-  						}, response => {
-  						console.log('errorSpecie')
-  					})
-  					}
-  						bus.$on('species', data => {
-  							if(data == true){
-  								if(response.ok == true){
-  									setTimeout(() => { 
+  	},
+    initialLoading(){
+        //----------Initial loading---------------------------------------------- 
+          let tempArr = [];
+          let tempSpecie = [];
+          let statusSpecies = [];
+          let counter = 0;
+          this.$http.get('https://swapi.co/api/people/')
+            .then(response => {
+              this.peoples = [];
+                for(let i = 0; i < response.data.results.length; i++){
+                  response.data.results[i].specie = '';
+                  for(let k = 0; k < this.images.length; k++){
+                    if(i == k){
+                      this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
+                    }
+                  }
+                }
+                for(let j = 0; j < this.peoples.length; j++){
+                  for(let k = 0; k < this.peoples[j].species.length; k++){
+                    tempSpecie.push(this.peoples[j].species[k])
+                  }
+                }
+                for(let str of tempSpecie){
+                  if(!tempArr.includes(str)){
+                    tempArr.push(str)
+                  }
+                }
+                tempSpecie = [];
+                for(let m = 0; m < tempArr.length; m++){
+                  this.$http.get(tempArr[m]).then(response => {
+                    tempSpecie.push(response.body)
+                    this.species = tempSpecie.map(item => {
+                      return {
+                        specie : item.name,
+                        url : item.url
+                      }
+                    })
+                    for(let i = 0; i < this.peoples.length; i++){
+                        for(let j = 0; j < this.peoples[i].species.length; j++){
+                          for(let d = 0; d < this.species.length; d++){
+                            if(this.peoples[i].species[j] == this.species[d].url){
+                              this.peoples[i].specie = this.species[d].specie
+                              
+                            }
+                          }
+                        }
+                      }
+                      if(response.ok == true){
+                      counter++
+                    }
+                    if(response.ok == false){
+                      counter
+                    }
+                    if(counter === tempArr.length){
+                      bus.$emit('species', true)
+                    }
+                    if(counter != tempArr.length){
+                      bus.$emit('species', false)
+                    }
+                  }, response => {
+                  console.log('errorSpecie')
+                })
+                }
+                  bus.$on('species', data => {
+                    if(data == true){
+                      if(response.ok == true){
+                        setTimeout(() => { 
+                            this.isAnimation = true;
+                          }, 980)
+                        setTimeout(() => {
+                          document.querySelector('body').style.overflowY = 'auto';
+                          document.querySelector('body').style.pointerEvents = 'auto';
+                            let withScroll = document.documentElement.clientWidth
+                            let outScroll = window.innerWidth
+                            let body = document.querySelector('body')
+                            let headerTitle = document.querySelector('#Header>.logo')
+                            let left =  document.querySelectorAll('.left')
+                            let padding = document.querySelector('.padding');
+                            if(withScroll < outScroll){
+                              let delta = (outScroll - withScroll)*100/outScroll;
+                              let newDelta = parseFloat(delta.toFixed(2), 10);  
+                              body.style.width = (100+newDelta)+'%';
+                              body.style.overflowX = 'hidden';
+                              headerTitle.style.paddingLeft = -newDelta+'%';
+                              for(let i = 0; i < left.length; i++){
+                                left[i].style.paddingLeft = -newDelta+'%';
+                              }
+                            }
+                            if(outScroll <= 767){
+                              body.style.width = outScroll
+                            }
+                        }, 3980)
+                      }
+                      bus.$emit('people', response.ok)
+                    }
+                  })
+                }, response => {
+                  console.log('errorPeople')
+                  console.log(response)
+                })  
+        //----------End initial loading------------------
+    },
+    pages() {
+      let page = this.$route.query.page
+      let tempArr = [];
+      let tempSpecie = [];
+      let statusSpecies = [];
+      let counter = 0;
+      this.$http.get('https://swapi.co/api/people/?page=' + page)
+        .then(response => {
+          this.peoples = [];
+            for(let i = 0; i < response.data.results.length; i++){
+              response.data.results[i].specie = '';
+              for(let k = 0; k < this.images.length; k++){
+                if(i == k){
+                  this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
+                }
+              }
+            }
+            for(let j = 0; j < this.peoples.length; j++){
+              for(let k = 0; k < this.peoples[j].species.length; k++){
+                tempSpecie.push(this.peoples[j].species[k])
+              }
+            }
+            for(let str of tempSpecie){
+              if(!tempArr.includes(str)){
+                tempArr.push(str)
+              }
+            }
+            tempSpecie = [];
+            for(let m = 0; m < tempArr.length; m++){
+              this.$http.get(tempArr[m]).then(response => {
+                tempSpecie.push(response.body)
+                this.species = tempSpecie.map(item => {
+                  return {
+                    specie : item.name,
+                    url : item.url
+                  }
+                })
+                for(let i = 0; i < this.peoples.length; i++){
+                    for(let j = 0; j < this.peoples[i].species.length; j++){
+                      for(let d = 0; d < this.species.length; d++){
+                        if(this.peoples[i].species[j] == this.species[d].url){
+                          this.peoples[i].specie = this.species[d].specie
+                          
+                        }
+                      }
+                    }
+                  }
+                  if(response.ok == true){
+                  counter++
+                }
+                if(response.ok == false){
+                  counter
+                }
+                if(counter === tempArr.length){
+                  bus.$emit('species', true)
+                }
+                if(counter != tempArr.length){
+                  bus.$emit('species', false)
+                }
+              }, response => {
+              console.log('errorSpecie')
+            })
+            }
+              bus.$on('species', data => {
+                if(data == true){
+                  bus.$emit('people', response.ok)
+                  if(response.ok == true){
+                    setTimeout(() => {
+                      this.showLoadPage = false;
+                      this.displayCarts = true;
+                      this.isAnimation = true;
+                    }, 1000)
+                    setTimeout(() => {
+                      this.displayCarts = false
+                      this.isnotDisplay = false;
+                      document.querySelector('body').style.overflowY = 'auto';
+                      document.querySelector('body').style.pointerEvents = 'auto';
+                    }, 4000)
+                  }
+                }
+              })
+            }, response => {
+              console.log('errorPeople')
+            })
+    },
+    initialPages() {
+      let page = this.$route.query.page
+      let tempArr = [];
+      let tempSpecie = [];
+      let statusSpecies = [];
+      let counter = 0;
+      this.$http.get('https://swapi.co/api/people/?page=' + page)
+        .then(response => {
+          this.peoples = [];
+            for(let i = 0; i < response.data.results.length; i++){
+              response.data.results[i].specie = '';
+              for(let k = 0; k < this.images.length; k++){
+                if(i == k){
+                  this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
+                }
+              }
+            }
+            for(let j = 0; j < this.peoples.length; j++){
+              for(let k = 0; k < this.peoples[j].species.length; k++){
+                tempSpecie.push(this.peoples[j].species[k])
+              }
+            }
+            for(let str of tempSpecie){
+              if(!tempArr.includes(str)){
+                tempArr.push(str)
+              }
+            }
+            tempSpecie = [];
+            for(let m = 0; m < tempArr.length; m++){
+              this.$http.get(tempArr[m]).then(response => {
+                tempSpecie.push(response.body)
+                this.species = tempSpecie.map(item => {
+                  return {
+                    specie : item.name,
+                    url : item.url
+                  }
+                })
+                for(let i = 0; i < this.peoples.length; i++){
+                    for(let j = 0; j < this.peoples[i].species.length; j++){
+                      for(let d = 0; d < this.species.length; d++){
+                        if(this.peoples[i].species[j] == this.species[d].url){
+                          this.peoples[i].specie = this.species[d].specie
+                          
+                        }
+                      }
+                    }
+                  }
+                  if(response.ok == true){
+                  counter++
+                }
+                if(response.ok == false){
+                  counter
+                }
+                if(counter === tempArr.length){
+                  bus.$emit('species', true)
+                }
+                if(counter != tempArr.length){
+                  bus.$emit('species', false)
+                }
+              }, response => {
+              console.log('errorSpecie')
+            })
+            }
+              bus.$on('species', data => {
+                if(data == true){
+                  if(response.ok == true){
+                    setTimeout(() => { 
                         this.isAnimation = true;
-  										}, 980)
+                      }, 980)
                     setTimeout(() => {
                       document.querySelector('body').style.overflowY = 'auto';
                       document.querySelector('body').style.pointerEvents = 'auto';
@@ -212,186 +391,142 @@ export default {
                           body.style.width = outScroll
                         }
                     }, 3980)
-  								}
-  								bus.$emit('people', response.ok)
-  							}
-  						})
-  					}, response => {
-  						console.log('errorPeople')
-              console.log(response)
-  					})	
-  	//----------End initial loading------------------
-  //----------Loading other pages-----------------
-  	let a = [];
-  	bus.$on('nextPage', data => {
-  		this.id = data;
-  		  	this.$nextTick(function() {
-  		  		if(this.id == 1){
-  		  			let tempArr = [];
-  		  			let tempSpecie = [];
-  		  			let statusSpecies = [];
-  		  			let counter = 0;
-  		  			this.$http.get('https://swapi.co/api/people/')
-  		  				.then(response => {
-  		  					this.peoples = [];
-  		  						for(let i = 0; i < response.data.results.length; i++){
-  		  							response.data.results[i].specie = '';
-  		  							for(let k = 0; k < this.images.length; k++){
-  		  								if(i == k){
-  		  									this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
-  		  								}
-  		  							}
-  		  						}
-  		  						for(let j = 0; j < this.peoples.length; j++){
-  		  							for(let k = 0; k < this.peoples[j].species.length; k++){
-  		  								tempSpecie.push(this.peoples[j].species[k])
-  		  							}
-  		  						}
-  		  						for(let str of tempSpecie){
-  		  							if(!tempArr.includes(str)){
-  		  								tempArr.push(str)
-  		  							}
-  		  						}
-  		  						tempSpecie = [];
-  		  						for(let m = 0; m < tempArr.length; m++){
-  		  							this.$http.get(tempArr[m]).then(response => {
-  		  								tempSpecie.push(response.body)
-  		  								this.species = tempSpecie.map(item => {
-  		  									return {
-  		  										specie : item.name,
-  		  										url : item.url
-  		  									}
-  		  								})
-  		  								for(let i = 0; i < this.peoples.length; i++){
-  		  								  	for(let j = 0; j < this.peoples[i].species.length; j++){
-  		  								  		for(let d = 0; d < this.species.length; d++){
-  		  								  			if(this.peoples[i].species[j] == this.species[d].url){
-  		  								  				this.peoples[i].specie = this.species[d].specie
-  		  								  				
-  		  								  			}
-  		  								  		}
-  		  								  	}
-  		  			  					}
-  		  			  					if(response.ok == true){
-  		  									counter++
-  		  								}
-  		  								if(response.ok == false){
-  		  									counter
-  		  								}
-  		  								if(counter === tempArr.length){
-  		  									bus.$emit('species', true)
-  		  								}
-  		  								if(counter != tempArr.length){
-  		  									bus.$emit('species', false)
-  		  								}
-  		  							}, response => {
-  		  							console.log('errorSpecie')
-  		  						})
-  		  						}
-  		  							bus.$on('species', data => {
-  		  								if(data == true){
-  		  									bus.$emit('people', response.ok)
-                          if(response.ok == true){
-                            setTimeout(() => {
-                              this.showLoadPage = false;
-                              this.displayCarts = true;
-                            }, 1000)
-                            setTimeout(() => {
-                              this.isnotDisplay = false;
-                              this.displayCarts = false
-                              document.querySelector('body').style.overflowY = 'auto';
-                            }, 4000)
+                  }
+                  bus.$emit('people', response.ok)
+                }
+              })
+            }, response => {
+              console.log('errorPeople')
+            })
+    },
+    initialLoadingNavigate(){
+        //----------Initial loading---------------------------------------------- 
+          let tempArr = [];
+          let tempSpecie = [];
+          let statusSpecies = [];
+          let counter = 0;
+          this.$http.get('https://swapi.co/api/people/')
+            .then(response => {
+              this.peoples = [];
+                for(let i = 0; i < response.data.results.length; i++){
+                  response.data.results[i].specie = '';
+                  for(let k = 0; k < this.images.length; k++){
+                    if(i == k){
+                      this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
+                    }
+                  }
+                }
+                for(let j = 0; j < this.peoples.length; j++){
+                  for(let k = 0; k < this.peoples[j].species.length; k++){
+                    tempSpecie.push(this.peoples[j].species[k])
+                  }
+                }
+                for(let str of tempSpecie){
+                  if(!tempArr.includes(str)){
+                    tempArr.push(str)
+                  }
+                }
+                tempSpecie = [];
+                for(let m = 0; m < tempArr.length; m++){
+                  this.$http.get(tempArr[m]).then(response => {
+                    tempSpecie.push(response.body)
+                    this.species = tempSpecie.map(item => {
+                      return {
+                        specie : item.name,
+                        url : item.url
+                      }
+                    })
+                    for(let i = 0; i < this.peoples.length; i++){
+                        for(let j = 0; j < this.peoples[i].species.length; j++){
+                          for(let d = 0; d < this.species.length; d++){
+                            if(this.peoples[i].species[j] == this.species[d].url){
+                              this.peoples[i].specie = this.species[d].specie
+                              
+                            }
                           }
-  		  								}
-  		  							})
-  		  						}, response => {
-  		  							console.log('errorPeople')
-  		  						})	
-  		  		}else{
-					let tempArr = [];
-  		  			let tempSpecie = [];
-  		  			let statusSpecies = [];
-  		  			let counter = 0;
-  		  			this.$http.get('https://swapi.co/api/people/?page=' + this.id)
-  		  				.then(response => {
-  		  					this.peoples = [];
-  		  						for(let i = 0; i < response.data.results.length; i++){
-  		  							response.data.results[i].specie = '';
-  		  							for(let k = 0; k < this.images.length; k++){
-  		  								if(i == k){
-  		  									this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
-  		  								}
-  		  							}
-  		  						}
-  		  						for(let j = 0; j < this.peoples.length; j++){
-  		  							for(let k = 0; k < this.peoples[j].species.length; k++){
-  		  								tempSpecie.push(this.peoples[j].species[k])
-  		  							}
-  		  						}
-  		  						for(let str of tempSpecie){
-  		  							if(!tempArr.includes(str)){
-  		  								tempArr.push(str)
-  		  							}
-  		  						}
-  		  						tempSpecie = [];
-  		  						for(let m = 0; m < tempArr.length; m++){
-  		  							this.$http.get(tempArr[m]).then(response => {
-  		  								tempSpecie.push(response.body)
-  		  								this.species = tempSpecie.map(item => {
-  		  									return {
-  		  										specie : item.name,
-  		  										url : item.url
-  		  									}
-  		  								})
-  		  								for(let i = 0; i < this.peoples.length; i++){
-  		  								  	for(let j = 0; j < this.peoples[i].species.length; j++){
-  		  								  		for(let d = 0; d < this.species.length; d++){
-  		  								  			if(this.peoples[i].species[j] == this.species[d].url){
-  		  								  				this.peoples[i].specie = this.species[d].specie
-  		  								  				
-  		  								  			}
-  		  								  		}
-  		  								  	}
-  		  			  					}
-  		  			  					if(response.ok == true){
-  		  									counter++
-  		  								}
-  		  								if(response.ok == false){
-  		  									counter
-  		  								}
-  		  								if(counter === tempArr.length){
-  		  									bus.$emit('species', true)
-  		  								}
-  		  								if(counter != tempArr.length){
-  		  									bus.$emit('species', false)
-  		  								}
-  		  							}, response => {
-  		  							console.log('errorSpecie')
-  		  						})
-  		  						}
-  		  							bus.$on('species', data => {
-  		  								if(data == true){
-  		  									bus.$emit('people', response.ok)
-                          if(response.ok == true){
-                            setTimeout(() => {
-                              this.showLoadPage = false;
-                              this.displayCarts = true
-                            }, 1000)
-                            setTimeout(() => {
-                              this.displayCarts = false
-                              this.isnotDisplay = false;
-                              document.querySelector('body').style.overflowY = 'auto';
-                            }, 4000)
-                          }
-  		  								}
-  		  							})
-  		  						}, response => {
-  		  							console.log('errorPeople')
-  		  						})	
-   		  		}
-  		  	})
-  	})
-  //----------End loading other pages--------------
+                        }
+                      }
+                      if(response.ok == true){
+                      counter++
+                    }
+                    if(response.ok == false){
+                      counter
+                    }
+                    if(counter === tempArr.length){
+                      bus.$emit('species', true)
+                    }
+                    if(counter != tempArr.length){
+                      bus.$emit('species', false)
+                    }
+                  }, response => {
+                  console.log('errorSpecie')
+                })
+                }
+                  bus.$on('species', data => {
+                    if(data == true){
+                      bus.$emit('people', response.ok)
+                      if(response.ok == true){
+                        setTimeout(() => {
+                          this.showLoadPage = false;
+                          this.displayCarts = true;
+                          this.isAnimation = true;
+                        }, 1000)
+                        setTimeout(() => {
+                          this.displayCarts = false
+                          this.isnotDisplay = false;
+                          document.querySelector('body').style.overflowY = 'auto';
+                          document.querySelector('body').style.pointerEvents = 'auto';
+                        }, 4000)
+                      }
+                    }
+                  })
+                }, response => {
+                  console.log('errorPeople')
+                  console.log(response)
+                })  
+        //----------End initial loading------------------
+    },
+    navigation() {
+      if(this.isNavigation == false){
+        if(this.$route.fullPath == '/'){
+          this.initialLoading();
+        }else{
+          this.initialPages()
+        }
+      }
+      bus.$on('numberPage', data => {
+        this.isNavigation == data
+        if(data == true){
+          this.showLoadPage = true;
+          this.isnotDisplay = true;
+          document.querySelector('body').style.overflowY = 'hidden';
+          document.querySelector('body').style.width = '100%';
+          if(this.$route.fullPath == '/'){
+            this.initialLoadingNavigate();
+          }else{
+            this.pages()
+          }
+        }else{
+          this.showLoadPage = false;
+          this.isnotDisplay = false;
+        }
+      })
+    }
+  },
+  computed: {
+  	filterHeroes: function(){
+  		return this.peoples.filter(hero => {
+  			return hero.name.match(this.search);
+  		})
+  	}
+  },
+  created(){
+  	document.querySelector('body').style.overflowY = 'hidden';
+  	document.querySelector('body').style.pointerEvents = 'none';
+    this.navigation();
+    
+    
+    
 	//----------Set width when modal window closed
   	bus.$on('showCom', data => {
   		this.show = data;
@@ -409,14 +544,6 @@ export default {
   		bus.$emit('show', false);
   	})
   //------------End set width--------------------------	
-  //-----------Animation loading another page
-    bus.$on('loadPage', data => {
-      this.showLoadPage = data;
-      this.isnotDisplay = true;
-      document.querySelector('body').style.overflowY = 'hidden';
-      document.querySelector('body').style.width = '100%';
-    })
-  //---------End animation loading
   },
 };
 </script>

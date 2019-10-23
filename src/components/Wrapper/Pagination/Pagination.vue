@@ -1,57 +1,43 @@
 <template>
-	<div id='pagination'>
-		<div class='left'>
-			<button v-for='page in pages' @click='num(page.page)' :class="{active: page.isActive}">{{page.page}}</button>
-		</div>
-	</div>
+  <div id='pagination'>
+    <div class='left'>
+      <router-link :to="{ path: '/'}" @click.native='num' active-class='active' tag='button' exact>1</router-link>
+      <router-link v-for='page in pages' @click.native='num' :to="{ path: '/', query: { page: page.page } }" active-class='active' tag='button' :key='page.id' exact>{{page.page}}</router-link>
+    </div>
+  </div>
 </template>
 
 <script>
 import {bus} from '../../../main.js'
 import {axios} from '../../../main.js'
-
 export default {
   data() {
     return {
-	    	pages: [],
+        pages: [],
         click: false
     };
   },
   methods: {
-  	num: function(page){
-  		bus.$emit('nextPage', page)
+    num: function() {
       this.click = true;
-      bus.$emit('loadPage', this.click)
-     for(let i = 0; i < this.pages.length; i++){
-        if(page-1 === i){
-          this.pages[i].isActive = true
-        }else{
-          this.pages[i].isActive = false
-        }
-      }
-      if(page === 1){
-        this.$router.push('/')
-      }else{
-        this.$router.push({ path: '/', query: { page: page } })
-      }
-      
-  	}
+      bus.$emit('numberPage', this.click)
+    }
   },
   created(){
-  	axios
+    axios
         .get('https://swapi.co/api/people/')
         .then(responsive =>{
-      		let page = Math.round(responsive.data.count/10)
-      		for(let i = 1; i < page+1; i++){
+          let page = Math.round(responsive.data.count/10)
+          for(let i = 2; i < page+1; i++){
               this.pages.push({
                         page: i,
                         isActive: false
                       })
-      		}
+          }
           this.pages[0].isActive = true;
-      	})
+        })
         .catch(error => {
-              for(let i = 1; i < 10; i++){
+              for(let i = 2; i < 10; i++){
                 this.pages.push({
                             page: i,
                             isActive: false
@@ -63,7 +49,6 @@ export default {
             })
         },
   }
-
 </script>
 
 
@@ -86,6 +71,7 @@ export default {
       outline: none;
       text-align: center;
       color: #565656;
+      font-family: 'Roboto', sans-serif;
     }
     .active,
     button:hover{
