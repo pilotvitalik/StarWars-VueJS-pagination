@@ -125,7 +125,6 @@ export default {
             }, 1500)
             setTimeout(() => {
               this.people[0].film = data;
-              console.log(data)
             }, 1800)
       })
   },

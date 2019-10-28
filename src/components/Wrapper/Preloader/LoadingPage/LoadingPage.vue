@@ -16,7 +16,7 @@ export default{
 		}
 	},
 	created(){
-		let withScroll = document.documentElement.clientWidth
+/*		let withScroll = document.documentElement.clientWidth
 		let outScroll = window.innerWidth
 		let body = document.querySelector('body')
 		let headerTitle = document.querySelector('#Header>.logo')
@@ -35,7 +35,7 @@ export default{
 		}
 		if(outScroll <= 767){
 		  body.style.width = outScroll
-		}
+		}*/
 	}
 }
 </script>
@@ -48,7 +48,7 @@ export default{
 	justify-content: center;
 	position: absolute;
 	width: 100%;
-	height: 600px;
+	height: 100px;
 	bottom: 0;
 	background: transparent;
 	z-index: 1000;

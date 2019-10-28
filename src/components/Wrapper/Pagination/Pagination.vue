@@ -1,58 +1,52 @@
 <template>
   <div id='pagination'>
-    <div class='left'>
-      <router-link :to="{ path: '/'}" @click.native='num' active-class='active' tag='button' exact>1</router-link>
-      <router-link v-for='page in pages' @click.native='num' :to="{ path: '/', query: { page: page.page } }" active-class='active' tag='button' :key='page.id' exact>{{page.page}}</router-link>
-    </div>
+    <transition name='changePages' mode='out-in'>
+      <component :is='view'></component>
+    </transition>
   </div>
 </template>
 
 <script>
 import {bus} from '../../../main.js'
 import {axios} from '../../../main.js'
+
+import Pages from './Pages/Pages.vue'
+import SearchPages from './SearchPages/SearchPages.vue'
+
 export default {
+  components: {
+    Pages: Pages,
+    SearchPages: SearchPages,
+  },
   data() {
     return {
-        pages: [],
-        click: false
+      view: Pages
     };
   },
-  methods: {
-    num: function() {
-      this.click = true;
-      bus.$emit('numberPage', this.click)
-    }
-  },
   created(){
-    axios
-        .get('https://swapi.co/api/people/')
-        .then(responsive =>{
-          let page = Math.round(responsive.data.count/10)
-          for(let i = 2; i < page+1; i++){
-              this.pages.push({
-                        page: i,
-                        isActive: false
-                      })
-          }
-          this.pages[0].isActive = true;
-        })
-        .catch(error => {
-              for(let i = 2; i < 10; i++){
-                this.pages.push({
-                            page: i,
-                            isActive: false
-                          })
-                
-              }
-              this.pages[0].isActive = true;
-              console.log(error)
-            })
-        },
+    bus.$on('search', data => {
+        if(data == true){
+          this.view = SearchPages;
+        }else{
+          this.view = Pages;
+        }
+       })
   }
+}
 </script>
 
 
-<style lang='less' scoped>
+<style lang='less'>
+.changePages-enter-active, .changePages-leave-active {
+  transition: opacity 1s linear;
+}
+.changePages-enter, .changePages-leave-to
+/* .component-fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+
+
 #pagination{
   background: #333;
   border: none;
