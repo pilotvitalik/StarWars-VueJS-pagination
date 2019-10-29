@@ -2,8 +2,8 @@
 <template>
 	<ul id='SearchCarts' :class="{display: !isShow}">
 		<li v-for='people in peoples' :key='people.name' @click = 'descript(people)'>
-			      <span>{{people.name}}</span>
-			      <ul>
+		  <span :class="{display: isNewPage}">{{people.name}}</span>
+		  <ul :class="{display: isNewPage}">
 			<li>{{people.image}}</li>
 			<li>{{people.specie}}</li>
 		  </ul>
@@ -20,6 +20,8 @@ export default{
 			peoples:[],
 			isShow: false,
 			isPage: false,
+			status: [],
+			isNewPage: false,
 		}
 	},
 	methods: {
@@ -28,7 +30,6 @@ export default{
 		},
 		firstPage(data){
 				this.$http.get('https://swapi.co/api/people/?search=' + data).then(response => {
-					console.log(response.body.next)
 					bus.$emit('searchPages', response.body.count)
 					let tmpPeoples = [];
 					tmpPeoples.push(response.body.results);
@@ -55,8 +56,10 @@ export default{
 						}
 					};
 					species = [];
+					bus.$emit('counterSpecies', uniq.length)
 			        for (let j = 0; j < uniq.length; j++) {
 			        	this.$http.get(uniq[j]).then(response => {
+			        	  bus.$emit('statusreceive', response.ok)
 			              species.push(response.body);
 			              species = species.map((item) => {
 			                return {
@@ -71,17 +74,15 @@ export default{
 			                  }
 			                }
 			              }
-			              setTimeout(() => {
-			              	this.isShow = true;
-			              	bus.$emit('iShow', true)
-			              }, 1000);
 			            });
 			        }
 			    });
 		},
 		otherPages(data){
+			let time = new Date();
+			console.log('request new data -- ' + time.getTime())
 			this.$http.get('https://swapi.co/api/people/?page=' + data + '&search=l').then(response => {
-				console.log(response)
+				console.log('receive new data -- ' + time.getTime())
 					let tmpPeoples = [];
 					tmpPeoples.push(response.body.results);
 					this.peoples = tmpPeoples[0].map(item => {
@@ -96,6 +97,7 @@ export default{
 							films: item.films,
 						}
 					});
+					console.log('fix data peopleAPI --- ' + time.getTime())
 					let species = [];
 					let uniq = [];
 					for(let i = 0; i < this.peoples.length; i++){
@@ -107,9 +109,24 @@ export default{
 						}
 					};
 					species = [];
+					console.log('create array uniq speciesAPI --- ' + time.getTime())
+					let num = 0;
+					let length = uniq.length;
+					for(let b = 0; b < uniq.length; b++){
+						if(uniq[b] == undefined){
+							length--;
+						}else{
+							length
+						}
+					}
+					bus.$emit('counterSpeciesLingth', length);
 			        for (let j = 0; j < uniq.length; j++) {
 			        	if(uniq[j] != undefined){
+			        			console.log('request uniq speciesAPI --- ' + time.getTime())
 			        			this.$http.get(uniq[j]).then(response => {
+			        			num++;
+			        			bus.$emit('statusOtherSpecies', num)
+			        			console.log('receive uniq speciesAPI --- ' + time.getTime())
 			        		      species.push(response.body);
 			        		      species = species.map((item) => {
 			        		        return {
@@ -117,30 +134,44 @@ export default{
 			        		          url: item.url,
 			        		        };
 			        		      }); // eslint-disable-next-line
-			        		      for (let m = 0; m < this.peoples.length; m++) { // eslint-disable-next-line
+			        		    for (let m = 0; m < this.peoples.length; m++) { // eslint-disable-next-line
 			        		        for (let n = 0; n < species.length; n++) {
 			        		          if (this.peoples[m].species === species[n].url) {
 			        		            this.peoples[m].specie = species[n].name;
+			        		            console.log('fix data speciesAPI --- ' + time.getTime())
 			        		          }
 			        		        }
 			        		      }
-			        		      for(let q = 0; q < this.peoples.length; q++){
+			        		     for(let q = 0; q < this.peoples.length; q++){
 			        		      	if(this.peoples[q].specie == ''){
 			        		      		this.peoples[q].specie = 'species unknown'
 			        		      	}
 			        		      }
-			        		      console.log(this.peoples)
-			        		      setTimeout(() => {
-			        		      	this.isShow = true;
-			        		      	bus.$emit('iShow', true)
-			        		      }, 1000);
 			        		    });
-			        		}			        	
+			        		}	        	
 			        }
 			    });
-		}
+		},
+		uniqArr(element){
+			this.status.push(element);
+			function uniq(element){
+				return element == true
+			}
+			if(this.status.every(uniq) === true){
+				setTimeout(() => {
+					this.isShow = true;
+					this.isNewPage = false;
+					bus.$emit('iShow', true)
+				}, 1000);
+			}
+		},
+	},
+	beforeCreate(){
+		console.log('beforeCreate')
 	},
 	created(){
+		let time = new Date();
+		console.log('Created')
 				bus.$on('val',  (data) => {
 					this.$nextTick(function() {
 						this.firstPage(data);
@@ -149,11 +180,18 @@ export default{
 				bus.$on('newValue',  (data) => {
 					this.firstPage(data)
 			    });
+			    let num = 0;
 				bus.$on('searchPage', (data) => {
+					let time = new Date();
+					console.log('receive data from click -- ' + time.getTime())
 					this.otherPages(data)
+					this.isNewPage = true;
+					console.log('display: none -- ' + time.getTime())
+					num = 0;
 				});
 				bus.$on('searchFirstPage', (data) => {
 					this.firstPage(data);
+					this.isNewPage = true;
 				})
 		bus.$emit('created', true)
 		
@@ -163,6 +201,38 @@ export default{
 		bus.$on('isPage', (data) => {
 			this.isPage = data
 		})
+		bus.$on('counterSpecies', dat => {
+			bus.$on('statusreceive', data => {
+				num++;
+				if(num == dat){
+					this.uniqArr(data);
+				}
+			})
+		});
+		
+		bus.$on('counterSpeciesLingth', dat => {
+			bus.$on('statusOtherSpecies', data => {
+			if(dat == data){
+				console.log('equal --- ' + time.getTime())
+				setTimeout(() => {
+					this.isNewPage = false
+				}, 1000);
+			}
+		})
+			})
+			
+  },
+  beforeMounte(){
+  	console.log('beforeMounte')
+  },
+  Mounted(){
+  	console.log('Mounted')
+  },
+  beforeUpadate(){
+  	console.log('beforeUpdate')
+  },
+  Updated(){
+  	console.log('Updated')
   },
   beforeDestroy(){
   	bus.$off('newValue');
@@ -172,7 +242,6 @@ export default{
   destroyed(){
   	this.$router.push({name: 'ListCarts'})
   	bus.$emit('created', false)
-  	console.log('element deleted')
   }
 };
 </script>

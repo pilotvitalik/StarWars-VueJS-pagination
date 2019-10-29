@@ -23,7 +23,9 @@ export default {
   },
   methods: {
     click(page) {
+      let time = new Date();
       bus.$emit('searchPage', page);
+      console.log('click --' + time.getTime())
     },
     clickFirstPage() {
       bus.$emit('searchFirstPage', this.pages[0].result);

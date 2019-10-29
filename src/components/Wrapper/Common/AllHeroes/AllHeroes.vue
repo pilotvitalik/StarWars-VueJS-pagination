@@ -522,7 +522,6 @@ export default {
       })
       bus.$on('modalWindo', data => {
         this.descript(data);
-        console.log(data)
       })
       
       
@@ -562,8 +561,6 @@ export default {
           this.isCreateSearch = data;
           if(this.isCreateSearch == true){
             bus.$emit('val', str)
-          }else{
-            console.log('element deleted')
           }
         })
        })
