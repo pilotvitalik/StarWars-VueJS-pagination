@@ -65,7 +65,6 @@ export default {
             isAnimation: false,
             isNavigation: false,
             view: ListCarts,
-            isSearch: false,
             isCreateSearch: false,
       };
   },
@@ -503,7 +502,7 @@ export default {
             this.isnotDisplay = false;
           }
         })
-      }
+      },
     },
     computed: {
       filterHeroes: function(){
@@ -576,6 +575,7 @@ export default {
 
 
 <style lang='less'>
+
 .changeComponent-enter-active, .changeComponent-leave-active {
   transition: opacity 1s linear;
 }
@@ -583,8 +583,6 @@ export default {
 /* .component-fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
-
-
 
 .slide-fade-enter-active {
   transition: all 3s ease;
@@ -628,10 +626,27 @@ export default {
 			border: none;
 			outline: none;
 		}
+    .title{
+      display: inline-block;
+      position: absolute;
+      width: 100%;
+      color: #808080;
+      font-family: 'Roboto', sans-serif;
+      pointer-events: none;
+    }
 		img{
 			display: block;
 			position: absolute;
 		}
+    .fa{
+      display: inline-block;
+      position: absolute;
+      color: #808080;
+    }
+    .fa:hover{
+      cursor: pointer;
+      color: #fff;
+    }
 	}
 	nav{
 		display: block;
@@ -706,10 +721,20 @@ export default {
 				line-height: 21px;
 				border-bottom: 1px solid #808080;
 			}
+      .title{
+      bottom: 5px;
+      left: 5px;
+      font-size: 18px;
+      line-height: 21px;
+      }
 			img{
-				top: 0;
+				top: 2px;
 				right: 5px;
 			}
+      .fa{
+        top: 5px;
+        right: 5px;
+      }
 		}
 		nav{
 			width: 1216*100/1440%;
@@ -761,10 +786,20 @@ export default {
 				line-height: 19px;
 				border-bottom: 1px solid #808080;
 			}
+      .title{
+      bottom: 5px;
+      left: 5px;
+      font-size: 16px;
+      line-height: 19px;
+      }
 			img{
-				top: 0;
+				top: 2px;
 				right: 0;
 			}
+      .fa{
+        top: 5px;
+        right: 5px;
+      }
 		}
 		nav{
 			width: 272*100/320%;

@@ -1,7 +1,9 @@
 <template>
 <div id='search' class='search lefts'>
-<input type='text' v-model='searchTxt' placeholder='Search by name' @keyup = 'startSearch'>
-<img :src='searchImg'>
+<input ref='input' type='text' v-model='searchTxt' @keyup = 'startSearch' @click = 'activateSearch'>
+<span class='title' :class="{clickSearch: isActive, active: isActive}">Search by name</span>
+<img :src='searchImg' :class="{clickImg: isActive, active: isActive, display: !isDisplay}">
+<i class="fa fa-times" aria-hidden="true" :class="{display: !isClose}" @click="stopSearch"></i>
 </div>
 </template>
 
@@ -16,7 +18,27 @@ export default {
       searchTxt: '',
       searchImg: search,
       isCreate: false,
+      isActive: false,
+      isDisplay: true,
+      isClose: false,
     };
+  },
+  methods: {
+    activateSearch: function() {
+      this.isActive = true;
+      this.isDisplay = false;
+      setTimeout(() => {
+        this.isDisplay = true;
+      }, 2900)
+       setTimeout(() => {
+        this.isClose = true;
+      }, 2900)
+    },
+    stopSearch: function(){
+      this.isActive = false;
+      this.isDisplay = true;
+      this.isClose = false;
+    }
   },
   created(){
     //---------Start tarnsfer data, create SearchCarts---
@@ -44,4 +66,26 @@ export default {
 </script>
 
 <style lang='less' scoped>
+//animation search
+.active{
+  transition: all 3s;
+}
+//-----------------
+.clickSearch{
+        bottom: 29px !important;
+        padding-top: 11px;
+        left: 1px !important;
+        padding-left: 2.5%;
+        font-size: 13px !important;
+        line-height: 15px !important;
+        width: 98% !important;
+      }
+.clickImg{
+  top: -20px !important;
+  right: 97.2% !important;
+  transform: scale(0.5);
+}
+.display{
+  display: none;
+}
 </style>
