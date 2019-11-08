@@ -2,9 +2,9 @@
 	<div id='AllHeroes'>
 		  <Search></Search>
     <transition name='slide-fade' type='transition'>
-		<nav class='left'  v-if='isAnimation'>
+		<nav class='left'  v-if='showNavLists'>
       <transition name='changeComponent' mode='out-in'>
-        <component :is='view' :people='peoples'></component>
+        <component :is='view'></component>
       </transition>
 		</nav>
     </transition>
@@ -13,18 +13,20 @@
 </template>
 
 <script>
-import {bus} from '../../../../main.js'
+import {bus} from '../../../../main.js';
+import { mapGetters } from 'vuex';
 
-  import luke_skywalker  from '../../../../assets/common/peoples/luke_skywalker.png';
-  import c_3po  from '../../../../assets/common/peoples/c_3po.png';
-  import r2_d2  from '../../../../assets/common/peoples/r2_d2.png';
-  import darth_vader  from '../../../../assets/common/peoples/darth_vader.png';
-  import lela_organa  from '../../../../assets/common/peoples/lela_organa.png';
-  import owen_lars  from '../../../../assets/common/peoples/owen_lars.png';
-  import beru_whitesun_lars  from '../../../../assets/common/peoples/beru_whitesun_lars.png';
-  import r5_d4  from '../../../../assets/common/peoples/r5_d4.png';
-  import biggsDarklighter  from '../../../../assets/common/peoples/biggs_darklighter.png';
-  import obi_wan_kenobi  from '../../../../assets/common/peoples/obi_wan_kenobi.png';
+import luke_skywalker  from '../../../../assets/common/peoples/luke_skywalker.png';
+import c_3po  from '../../../../assets/common/peoples/c_3po.png';
+import r2_d2  from '../../../../assets/common/peoples/r2_d2.png';
+import darth_vader  from '../../../../assets/common/peoples/darth_vader.png';
+
+import owen_lars  from '../../../../assets/common/peoples/owen_lars.png';
+import beru_whitesun_lars  from '../../../../assets/common/peoples/beru_whitesun_lars.png';
+import r5_d4  from '../../../../assets/common/peoples/r5_d4.png';
+import biggsDarklighter  from '../../../../assets/common/peoples/biggs_darklighter.png';
+import obi_wan_kenobi  from '../../../../assets/common/peoples/obi_wan_kenobi.png';
+
 
   import LoadingPage from '../../Preloader/LoadingPage/LoadingPage.vue'
   import ListCarts from './ListCarts/ListCarts.vue'
@@ -46,7 +48,7 @@ export default {
               {img: c_3po},
               {img: r2_d2},
               {img: darth_vader},
-              {img: lela_organa},
+
               {img: owen_lars},
               {img: beru_whitesun_lars},
               {img: r5_d4},
@@ -105,11 +107,10 @@ export default {
           bus.$emit('add', this.person)
         } 
       },
-      initialLoading(){
+      /*initialLoading(){
           //----------Initial loading---------------------------------------------- 
             let tempArr = [];
             let tempSpecie = [];
-            let statusSpecies = [];
             let counter = 0;
             this.$http.get('https://swapi.co/api/people/')
               .then(response => {
@@ -121,7 +122,7 @@ export default {
                         this.peoples.push(Object.assign(response.data.results[i], this.images[k]))
                       }
                     }
-                  }
+                  };
                   for(let j = 0; j < this.peoples.length; j++){
                     for(let k = 0; k < this.peoples[j].species.length; k++){
                       tempSpecie.push(this.peoples[j].species[k])
@@ -146,8 +147,7 @@ export default {
                           for(let j = 0; j < this.peoples[i].species.length; j++){
                             for(let d = 0; d < this.species.length; d++){
                               if(this.peoples[i].species[j] == this.species[d].url){
-                                this.peoples[i].specie = this.species[d].specie
-                                
+                                this.peoples[i].specie = this.species[d].specie 
                               }
                             }
                           }
@@ -206,7 +206,7 @@ export default {
                     console.log(response)
                   })  
           //----------End initial loading------------------
-      },
+      },*/
       pages() {
         let page = this.$route.query.page
         let tempArr = [];
@@ -480,7 +480,7 @@ export default {
       navigation() {
         if(this.isNavigation == false){
           if(this.$route.fullPath == '/'){
-            this.initialLoading();
+            this.initialLoad();
           }else{
             this.initialPages()
           }
@@ -503,28 +503,31 @@ export default {
           }
         })
       },
+      initialLoad() {
+        this.$store.dispatch('initialLoad');
+      },
     },
     computed: {
-      filterHeroes: function(){
-        return this.peoples.filter(hero => {
-          return hero.name.match(this.search);
-        })
-      }
+      ...mapGetters([
+        'showNavLists'
+      ]),
     },
     created(){
       document.querySelector('body').style.overflowY = 'hidden';
       document.querySelector('body').style.pointerEvents = 'none';
       this.navigation();
+      //----------Receive data about selected character from ListCarts------------------
       bus.$on('modalWindow', data => {
         this.descript(data);
         console.log(data)
       })
+      //------------End receive data about selected character from ListCarts-----------
+      //----------Receive data about selected character from SearchCarts-----------------
       bus.$on('modalWindo', data => {
         this.descript(data);
       })
-      
-      
-    //----------Set width when modal window closed
+      //------------End receive data about selected character from SearchCarts-----------      
+    //----------Set width when modal window closed------------------
       bus.$on('showCom', data => {
         this.show = data;
         document.querySelector('body').style.overflowY = 'auto';
@@ -538,7 +541,7 @@ export default {
             body.style.overflowX = 'hidden';
           };
           this.person = [];
-        bus.$emit('show', false);
+
       })
     //------------End set width-------------------------- 
     //-------------Disappear ListCarts, create SearchCarts and start animation loading
@@ -585,7 +588,7 @@ export default {
 }
 
 .slide-fade-enter-active {
-  transition: all 3s ease;
+  transition: all 2.5s ease;
 }
 .slide-fade-enter{
   transform: translateY(100px);
@@ -835,9 +838,9 @@ export default {
 				}
 			}
 		}
-	}
+  }
 }
 .display{
-	display: none;
+  display: none;
 }
 </style>

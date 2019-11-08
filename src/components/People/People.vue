@@ -95,6 +95,7 @@ export default {
       this.people = '';
       this.showPersonLoading.film = false;
       this.showPersonLoading.home = false;
+      this.show = false;
     }
   },
   created(){

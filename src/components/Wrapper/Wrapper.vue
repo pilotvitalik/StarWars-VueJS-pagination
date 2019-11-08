@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper" :style='{filter: blur, pointerEvents: mouse}'>
-   <Preloader v-if='isShow'></Preloader>
+   <Preloader v-if='!showNavLists'></Preloader>
    <appHeader></appHeader>
    <router-view></router-view>
    <Pages></Pages>
@@ -9,7 +9,8 @@
 </template>
 
 <script>
-import {bus} from '../../main.js'
+import {bus} from '../../main';
+import { mapGetters } from 'vuex';
 
 import Header from './Header/Header.vue';
 import Footer from './Footer/Footer.vue';
@@ -27,12 +28,16 @@ export default {
     return {
       blur: '',
       mouse: '',
-      isShow: true,
       request: {
         people: ''
       }
     };
   }, 
+  computed: {
+    ...mapGetters([
+      'showNavLists',
+    ]),
+  },
   created(){
     bus.$on('blur', (data) => { 
       this.blur = data;
@@ -45,19 +50,6 @@ export default {
     bus.$on('sh', data => {
       this.show = false
     })
-    bus.$on('people', data => {
-      this.request.people = data
-      this.$nextTick(function() {
-        if(this.request.people == true){
-          setTimeout(() => {
-            this.isShow = false
-          }, 980)
-        }
-      })
-    })
-
-
-
   },
 }
 </script>

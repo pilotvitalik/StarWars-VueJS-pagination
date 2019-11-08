@@ -1,10 +1,10 @@
 <template>
 	<ul id='listCarts'>
-		<li v-for='people in people' :key='people.name' @click = 'descript(people)'>
+		<li v-for='people in listCharacters' :key='people.name' @click = 'descript(people)'>
 	      <span :class="{notDisplay: isnotDisplay, view: displayCarts}">{{people.name}}</span>
 	      <ul :class="{notDisplay: isnotDisplay, view: displayCarts}">
-			<li><img v-bind:src="people.img"/></li>
-			<li>{{people.specie}}</li>
+			<li><img v-bind:src="people.image"/></li>
+			<li>{{people.speciesName}}</li>
 		  </ul>
 		</li>
 	</ul>
@@ -13,9 +13,9 @@
 <script>
 	import {bus} from '../../../../../main.js'
 	import {axios} from '../../../../../main.js'
+import { mapGetters } from 'vuex';
 
 export default{
-	props: ['people'],
 	data(){
 		return{
 	    	isnotDisplay: false,
@@ -26,6 +26,11 @@ export default{
 		descript: function(people){
 			bus.$emit('modalWindow', people)
 		}
+	},
+	computed: {
+	  ...mapGetters([
+	    'listCharacters'
+	  ]),
 	},
 	created(){
 		bus.$on('isnotDisplay', data => {

@@ -4,7 +4,7 @@ import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 import Routes from './Routers.js'
 import debounce from 'lodash.debounce';
-
+import { store } from './store/store';
 
 Vue.config.productionTip = false;
 
@@ -21,6 +21,7 @@ const router = new VueRouter({
 	});
 
 new Vue({
+	store,
   render: h => h(App),
   router: router,
 }).$mount('#app');
