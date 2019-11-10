@@ -29,10 +29,12 @@ export const store = new Vuex.Store({ // eslint-disable-line
       obi_wan_kenobi,// eslint-disable-line
     ],
     peopleAPI: 'https://swapi.co/api/people/',
+    pagesAPI: 'https://swapi.co/api/people/?page=',
     speciesListCarts: [],
     listCarts: '',
     listCharacters: '',
     showNavLists: false,
+    showLoadPage: false,
     requestStatusPeople: false,
     requestStatusSpecies: false,
     mergeStatusArray: false,
@@ -44,6 +46,9 @@ export const store = new Vuex.Store({ // eslint-disable-line
     },
     listCharacters: (state) => { // eslint-disable-line
       return state.listCharacters;
+    },
+    showLoadPage: (state) => { // eslint-disable-line
+      return state.showLoadPage;
     },
   },
   mutations: {
@@ -127,18 +132,19 @@ export const store = new Vuex.Store({ // eslint-disable-line
     },
     mergeArray: (state) => {
       state.listCarts.forEach((item) => {
+        if(item.species.length === 0){
+          item.speciesName = 'species uknown'
+        }
         item.species.forEach((itemURL) => {
           state.speciesListCarts.forEach((itemSpecies) => {
             if (itemURL === itemSpecies.url) {
               item.speciesName = itemSpecies.species
             }
-          })
-        })
-      })
+          });
+        });
+      });
       state.listCharacters = state.listCarts;
       state.mergeStatusArray = true;
-      console.log(state.listCarts);
-      console.log(state.mergeStatusArray)
     },
     defaultWidth: () => {
       document.querySelector('body').style.overflowY = 'auto';
@@ -163,11 +169,41 @@ export const store = new Vuex.Store({ // eslint-disable-line
           body.style.width = outScroll
         }
     },
+    otherDefaultWidth: (state) => {
+        state.showLoadPage = false;
+        state.showNavLists = true;
+        document.querySelector('body').style.overflowY = 'auto';
+        document.querySelector('body').style.pointerEvents = 'auto';
+    },
+    pagination: (state, payload) => {
+      let tmpPeople = '';
+            Vue.http.get(state.pagesAPI + payload).then((response) => {
+              state.requestStatusPeople = response.ok;
+              tmpPeople = response.body.results;
+              tmpPeople.forEach((itemPeople) => {
+                itemPeople.imageName = ''; // eslint-disable-line
+                itemPeople.image = ''; // eslint-disable-line
+                itemPeople.speciesName = ''; // eslint-disable-line
+                itemPeople.imageName = itemPeople.name.toLowerCase().replace('-', '_').replace(' ', '_').replace(' ', '_'); // eslint-disable-line
+                state.images.forEach((item) => {
+                  if (itemPeople.imageName === item.imageName) {
+                    itemPeople.image = item.url; // eslint-disable-line
+                  }
+                });
+                state.listCarts = tmpPeople;
+                state.speciesListCarts.push(itemPeople.species)
+              });
+            });
+    },
   },
   actions: {
-    initialLoad: ({state, commit}) => {
+    initialLoad: ({state, commit}, payload) => {
       commit('changeImages');
-      commit('requestPeopleAPI');
+      if(payload.fullPath === '/'){
+        commit('requestPeopleAPI');
+      } else {
+        commit('pagination', payload.query.page);
+      }
       let timerStatusPeople = setTimeout(function requestSpecies() {
         if(state.requestStatusPeople === true){
           commit('requestSpeciesAPI');
@@ -187,7 +223,6 @@ export const store = new Vuex.Store({ // eslint-disable-line
       let timerMergeArray = setTimeout(function mergeArray() {
         if(state.mergeStatusArray === true){
           state.showNavLists = true;
-          console.log('данные получены')
           clearTimeout(timerMergeArray);
           setTimeout(() => {
             commit('defaultWidth')
@@ -196,6 +231,33 @@ export const store = new Vuex.Store({ // eslint-disable-line
           setTimeout(mergeArray, 1)
         }
       }, 980);
+    },
+    pagination: ({ state, commit }, payload ) => {
+      state.speciesListCarts = [];
+      state.requestStatusPeople = false;
+      state.requestStatusSpecies = false;
+      state.counter = 0;
+      if(payload === '/'){
+        commit('requestPeopleAPI');
+      } else {
+        commit('pagination', payload);
+      }
+      let timerStatusPeople = setTimeout(function requestSpecies() {
+        if(state.requestStatusPeople === true){
+          commit('requestSpeciesAPI');
+          clearTimeout(timerStatusPeople);
+        }else{
+          setTimeout(requestSpecies, 1)
+        }
+      },1)
+      let timerStatusSpecies = setTimeout(function requestStatusSpeciesAPI() {
+        if(state.requestStatusSpecies === true){
+          commit('mergeArray')
+          clearTimeout(timerStatusSpecies);
+        }else{
+          setTimeout(requestStatusSpeciesAPI, 1)
+        }
+      },1)
     },
   },
 });

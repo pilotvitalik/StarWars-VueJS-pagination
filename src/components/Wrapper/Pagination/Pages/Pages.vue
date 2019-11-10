@@ -1,7 +1,7 @@
 <template>
 	<div id='pages' class='left'>
-      <router-link :to="{ path: '/'}" @click.native='num' active-class='active' tag='button' exact>1</router-link>
-      <router-link v-for='page in pages' @click.native='num' :to="{ path: '/', query: { page: page.page } }" active-class='active' tag='button' :key='page.id' exact>{{page.page}}</router-link>
+      <router-link :to="{ path: '/'}" @click.native="pagination('/')" active-class='active' tag='button' exact>1</router-link>
+      <router-link v-for='page in pages' @click.native='pagination(page.page)' :to="{ path: '/', query: { page: page.page } }" active-class='active' tag='button' :key='page.id' exact>{{page.page}}</router-link>
     </div>
 </template>
 
@@ -13,14 +13,12 @@ export default{
 	data(){
 		return{
 			pages: [],
-			click: false
 		}
 	},
 	methods: {
-	  num: function() {
-	    this.click = true;
-	    bus.$emit('numberPage', this.click)
-	  }
+	  pagination (page) {
+        this.$store.dispatch('pagination', page);
+	  },
 	},
 	created(){
     axios

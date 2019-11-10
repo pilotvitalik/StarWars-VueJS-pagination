@@ -1,8 +1,8 @@
 <template>
 	<ul id='listCarts'>
 		<li v-for='people in listCharacters' :key='people.name' @click = 'descript(people)'>
-	      <span :class="{notDisplay: isnotDisplay, view: displayCarts}">{{people.name}}</span>
-	      <ul :class="{notDisplay: isnotDisplay, view: displayCarts}">
+	      <span>{{people.name}}</span>
+	      <ul>
 			<li><img v-bind:src="people.image"/></li>
 			<li>{{people.speciesName}}</li>
 		  </ul>
@@ -33,16 +33,6 @@ export default{
 	  ]),
 	},
 	created(){
-		bus.$on('isnotDisplay', data => {
-			this.isnotDisplay = data;
-		})
-		bus.$on('displayCarts', data => {
-			this.displayCarts = data;
-		});
-		bus.$on('notDisplayCarts', data => {
-			this.displayCarts = data;
-			this.isnotDisplay = data;
-		})
 	}
 }
 </script>
