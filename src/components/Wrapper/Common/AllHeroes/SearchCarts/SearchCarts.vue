@@ -1,18 +1,19 @@
 
 <template>
-	<ul id='SearchCarts' :class="{display: !isShow}">
-		<li v-for='people in peoples' :key='people.name' @click = 'descript(people)'>
-		  <span :class="{display: isNewPage}">{{people.name}}</span>
-		  <ul :class="{display: isNewPage}">
-			<li>{{people.image}}</li>
-			<li>{{people.specie}}</li>
+	<ul id='SearchCarts'>
+		<li v-for='people in listCharacters' :key='people.name' @click = 'descript(people)'>
+		  <span>{{people.name}}</span>
+		  <ul>
+			<li><img v-bind:src="people.image"/></li>
+			<li>{{people.speciesName}}</li>
 		  </ul>
 		</li>
 	</ul>
 </template>
 
 <script>
-import { bus } from '../../../../../main'
+import { bus } from '../../../../../main';
+import { mapGetters } from 'vuex';
 
 export default{
 	data(){
@@ -25,8 +26,8 @@ export default{
 		}
 	},
 	methods: {
-		descript: function(people){
-			bus.$emit('modalWindo', people)
+		descript(people) {
+			this.$store.dispatch('descript', people)
 		},
 		firstPage(data){
 				this.$http.get('https://swapi.co/api/people/?search=' + data).then(response => {
@@ -166,12 +167,13 @@ export default{
 			}
 		},
 	},
-	beforeCreate(){
-		console.log('beforeCreate')
+	computed: {
+	  ...mapGetters([
+	    'listCharacters'
+	  ]),
 	},
 	created(){
 		let time = new Date();
-		console.log('Created')
 				bus.$on('val',  (data) => {
 					this.$nextTick(function() {
 						this.firstPage(data);

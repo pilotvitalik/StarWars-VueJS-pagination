@@ -1,10 +1,7 @@
 <template>
-<div id='searchPages' :class="{display: !isShow}"> <!--eslint-disable-next-line-->
-<router-link :to="{ path: 'search', query: {result: value} }" @click.native = 'clickFirstPage' active-class='active' :class="{active: isOnePage}" tag='button' :key='1' exact>
-1
-</router-link> <!--eslint-disable-next-line-->
-<router-link v-for='page in pages' :to="{ path: 'search', query: {page: page.page, result: page.result} }" @click.native = 'click(page.page)' active-class='active' tag='button' :key='page.id' exact>
-{{page.page}}
+<div id='searchPages'> <!--eslint-disable-next-line-->
+<router-link v-for='page in pages' :to="{ path: 'search', query: {result: result, page: page} }" @click.native = 'searchPagination(page)' active-class='active' tag='button' :key='page.id' exact>
+{{page}}
 </router-link>
 </div>
 </template>
@@ -15,21 +12,25 @@ import { bus } from '../../../../main';
 export default {
   data() {
     return {
-      pages: [],
       value: '',
       isShow: false,
-      isOnePage: false,
     };
   },
   methods: {
-    click(page) {
-      let time = new Date();
-      bus.$emit('searchPage', page);
-      console.log('click --' + time.getTime())
+    searchPagination(page) {
+      this.$store.dispatch('searchPagination', page)
+      if (page === 1) {
+        this.$router.push({ path: 'search', query: {result: this.result } });
+      }
     },
-    clickFirstPage() {
-      bus.$emit('searchFirstPage', this.pages[0].result);
+  },
+  computed: {
+    pages() {
+      return this.$store.state.searchPages;
     },
+    result() {
+      return this.$store.state.searchResult;
+    }
   },
   created() {
     bus.$on('searchPages', (data) => { // eslint-disable-next-line

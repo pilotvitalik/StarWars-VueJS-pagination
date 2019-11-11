@@ -4,7 +4,7 @@
     <transition name='slide-fade' type='transition'>
 		<nav class='left'  v-if='showNavLists'>
       <transition name='changeComponent' mode='out-in'>
-        <component :is='view'></component>
+        <component :is='showComponent'></component>
       </transition>
 		</nav>
     </transition>
@@ -29,47 +29,9 @@ export default {
     return {
             show: false,
             person:[],
-            view: ListCarts,
-            isCreateSearch: false,
       };
   },
     methods: {
-      descript(people) {
-        let obj = {};
-        let arr = [];
-        if(this.show == false){
-          bus.$emit('show', true);
-          bus.$emit('blur', 'blur(5px)');
-          document.querySelector('body').style.overflowY = 'hidden';
-          document.querySelector('body').style.width = '100%';
-          obj = {
-            name: people.name,
-            image: people.img,
-            birth: people.birth_year,
-            specie: people.specie,
-            gender: people.gender,
-            home: people.homeworld,
-            film: '',
-            planet: '',
-          }
-          this.$http.get(people.homeworld).then(responsive => {
-            if(responsive.ok == true){
-              bus.$emit('planet', responsive.data.name)
-            }
-          })
-          for(let i = 0; i < people.films.length; i++){
-            this.$http.get(people.films[i]).then(responsive => {
-              bus.$emit('sh', false)
-              if(responsive.ok == true){
-                arr.push(responsive.data.title)
-                bus.$emit('films', arr)
-              }
-            })
-          }
-          this.person.push(obj)
-          bus.$emit('add', this.person)
-        } 
-      },
       initialLoad() {
         this.$store.dispatch('initialLoad', this.$route);
       },
@@ -77,63 +39,13 @@ export default {
     computed: {
       ...mapGetters([
         'showNavLists',
+        'showComponent'
       ]),
     },
     created(){
       document.querySelector('body').style.overflowY = 'hidden';
       document.querySelector('body').style.pointerEvents = 'none';
       this.initialLoad();
-      //----------Receive data about selected character from ListCarts------------------
-      bus.$on('modalWindow', data => {
-        this.descript(data);
-        console.log(data)
-      })
-      //------------End receive data about selected character from ListCarts-----------
-      //----------Receive data about selected character from SearchCarts-----------------
-      bus.$on('modalWindo', data => {
-        this.descript(data);
-      })
-      //------------End receive data about selected character from SearchCarts-----------      
-    //----------Set width when modal window closed------------------
-      bus.$on('showCom', data => {
-        this.show = data;
-        document.querySelector('body').style.overflowY = 'auto';
-        let withScroll = document.documentElement.clientWidth
-          let outScroll = window.innerWidth
-          let body = document.querySelector('body')
-          if(withScroll < outScroll){
-            let delta = (outScroll - withScroll)*100/outScroll;
-            let newDelta = parseFloat(delta.toFixed(16), 10);
-            body.style.width = (100+newDelta)+'%';
-            body.style.overflowX = 'hidden';
-          };
-          this.person = [];
-
-      })
-    //------------End set width-------------------------- 
-    //-------------Disappear ListCarts, create SearchCarts and start animation loading
-       bus.$on('search', data => {
-        if(data == true){
-          this.view = SearchCarts;
-          this.showLoadPagee = data;
-        }else{
-          this.view = ListCarts;
-          this.showLoadPagee = data;
-        }
-       })
-       let str = '';
-       bus.$on('value', data => {
-        str = data;
-       });
-       bus.$on('created', data => {
-        this.$nextTick(function() {
-          this.isCreateSearch = data;
-          if(this.isCreateSearch == true){
-            bus.$emit('val', str)
-          }
-        })
-       })
-     //-------------------------------------------------------------   
      //---------------Stop animation loading from ListCarts to SearchCarts---------
       bus.$on('iShow', data => {
         this.showLoadPagee = !data;

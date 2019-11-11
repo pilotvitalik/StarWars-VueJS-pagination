@@ -30,6 +30,8 @@ export const store = new Vuex.Store({ // eslint-disable-line
     ],
     peopleAPI: 'https://swapi.co/api/people/',
     pagesAPI: 'https://swapi.co/api/people/?page=',
+    searchAPI: 'https://swapi.co/api/people/?search=',
+    searchPagesAPI: '&page=',
     speciesListCarts: [],
     listCarts: '',
     listCharacters: '',
@@ -39,6 +41,32 @@ export const store = new Vuex.Store({ // eslint-disable-line
     requestStatusSpecies: false,
     mergeStatusArray: false,
     counter: 0,
+    view: 'ListCarts',
+    viewPages: 'Pages',
+    //-------------Search component----------
+    isActiveSearch: false,
+    isDisplaySearch: true,
+    isCloseSearch: false,
+    //---------------------------------------
+    //----------------Pages-------------------
+    listPages: [],
+    //----------------------------------------
+    //-------------SearchPages component----------
+    searchPages: [],
+    searchResult: '',
+    //---------------------------------------
+    //-------------People component----------
+    descriptionList: '',
+    blur: '',
+    showPeople: false,
+    animateLoadHome: false,
+    statusReceiveHome: false,
+    animateLoadFilms: {
+      film: false,
+      others: false,
+    },
+    statusReceiveFilms: false,
+    //---------------------------------------
   },
   getters: {
     showNavLists: (state) => { // eslint-disable-line
@@ -50,6 +78,28 @@ export const store = new Vuex.Store({ // eslint-disable-line
     showLoadPage: (state) => { // eslint-disable-line
       return state.showLoadPage;
     },
+    showComponent: (state) => { // eslint-disable-line
+      return state.view;
+    },
+    //-------------Search component----------
+    activeSearch: (state) => {
+      return state.isActiveSearch;
+    },
+    displaySearch: (state) => {
+      return state.isDisplaySearch;
+    },
+    closeSearch: (state) => {
+      return state.isCloseSearch;
+    },
+    //---------------------------------------
+    //-------------People component----------
+    showBlur: (state) => {
+      return state.blur;
+    },
+    showPeople: (state) => {
+      return state.showPeople
+    }
+    //---------------------------------------
   },
   mutations: {
     changeImages: (state) => {
@@ -66,6 +116,10 @@ export const store = new Vuex.Store({ // eslint-disable-line
     requestPeopleAPI: (state) => {
       let tmpPeople = '';
       Vue.http.get(state.peopleAPI).then((response) => {
+        let pages = (Math.ceil(response.body.count / 10) + 1);
+        for (let i = 1; i < pages; i++) {
+          state.listPages.push(i);
+        }
         state.requestStatusPeople = response.ok;
         tmpPeople = response.body.results;
         tmpPeople.forEach((itemPeople) => {
@@ -195,6 +249,126 @@ export const store = new Vuex.Store({ // eslint-disable-line
               });
             });
     },
+    //-------------Search component----------
+    activeSearch: (state) => {
+      state.isActiveSearch = true;
+      state.isDisplaySearch = false;
+      setTimeout(() => {
+        state.isDisplaySearch = true;
+        state.isCloseSearch = true
+      }, 2900)
+    },
+    stopSearch: (state) => {
+      state.isActiveSearch = false;
+      state.isDisplaySearch = true;
+      state.isCloseSearch = false;
+    },
+    search: (state, payload) => {
+      state.view = 'SearchCarts';
+      state.viewPages = 'SearchPages';
+      state.searchPages = [];
+      let tmpPeople = '';
+            Vue.http.get(state.searchAPI + payload).then((response) => {
+              for(let i = 1; i < Math.ceil(response.body.count/10) + 1;i++){
+                state.searchPages.push(i);
+              }
+              state.searchResult = payload;
+              state.requestStatusPeople = response.ok;
+              tmpPeople = response.body.results;
+              tmpPeople.forEach((itemPeople) => {
+                itemPeople.imageName = ''; // eslint-disable-line
+                itemPeople.image = ''; // eslint-disable-line
+                itemPeople.speciesName = ''; // eslint-disable-line
+                itemPeople.imageName = itemPeople.name.toLowerCase().replace('-', '_').replace(' ', '_').replace(' ', '_'); // eslint-disable-line
+                state.images.forEach((item) => {
+                  if (itemPeople.imageName === item.imageName) {
+                    itemPeople.image = item.url; // eslint-disable-line
+                  }
+                });
+                state.listCarts = tmpPeople;
+                state.speciesListCarts.push(itemPeople.species)
+              });
+            });
+    },
+    //---------------------------------------
+    //-------------People component----------
+    descript: (state, payload) => {
+      state.showPeople = true;
+      state.animateLoadHome = true;
+      state.animateLoadFilms.film = true;
+      state.animateLoadFilms.others = true;
+      state.blur = 'blur(5px)';
+      document.querySelector('body').style.overflowY = 'hidden';
+      document.querySelector('body').style.width = '100%';
+      state.descriptionList = payload;
+      state.descriptionList.home = '';
+      state.descriptionList.nameFilms = '';
+    },
+    receiveHomeWorld: (state) => {
+      Vue.http.get(state.descriptionList.homeworld).then(response => {
+        if(response.ok == true){
+          state.descriptionList.home = response.body.name
+          state.animateLoadHome = false
+        }
+      })
+    },
+    receiveFilms: (state) => {
+      let arrFilms = [];
+      let counterFilms = 0;
+      for(let i = 0; i < state.descriptionList.films.length; i++){
+        Vue.http.get(state.descriptionList.films[i]).then(response => {
+          if(response.ok == true){
+            counterFilms++
+            arrFilms.push(response.data.title);
+          }
+          if(counterFilms === state.descriptionList.films.length){
+            state.descriptionList.nameFilms = arrFilms;
+            state.animateLoadFilms.film = false;
+            state.animateLoadFilms.others = false;
+          }
+        })
+      }
+    },
+    closeDescript: (state) => {
+      state.blur = '';
+      state.descriptionList = '';
+      state.animateLoadFilms.film = false;
+      state.animateLoadHome = false;
+      state.showPeople = false;
+      document.querySelector('body').style.overflowY = 'auto';
+      let withScroll = document.documentElement.clientWidth
+        let outScroll = window.innerWidth
+        let body = document.querySelector('body')
+        if(withScroll < outScroll){
+          let delta = (outScroll - withScroll)*100/outScroll;
+          let newDelta = parseFloat(delta.toFixed(16), 10);
+          body.style.width = (100+newDelta)+'%';
+          body.style.overflowX = 'hidden';
+        };
+    },
+    //---------------------------------------
+    //---------SearchPages component--------
+    searchPagination: (state, payload) => {
+      let tmpPeople = '';
+            Vue.http.get(state.searchAPI + state.searchResult + state.searchPagesAPI + payload).then((response) => {
+              state.requestStatusPeople = response.ok;
+              tmpPeople = response.body.results;
+              tmpPeople.forEach((itemPeople) => {
+                itemPeople.imageName = ''; // eslint-disable-line
+                itemPeople.image = ''; // eslint-disable-line
+                itemPeople.speciesName = ''; // eslint-disable-line
+                itemPeople.imageName = itemPeople.name.toLowerCase().replace('-', '_').replace(' ', '_').replace(' ', '_'); // eslint-disable-line
+                state.images.forEach((item) => {
+                  if (itemPeople.imageName === item.imageName) {
+                    itemPeople.image = item.url; // eslint-disable-line
+                  }
+                });
+                state.listCarts = tmpPeople;
+                state.speciesListCarts.push(itemPeople.species)
+              });
+            });
+    },
+    //---------------------------------------
   },
   actions: {
     initialLoad: ({state, commit}, payload) => {
@@ -259,5 +433,69 @@ export const store = new Vuex.Store({ // eslint-disable-line
         }
       },1)
     },
+    //-------------Search component----------
+    activeSearch: ({ commit }) => {
+      commit('activeSearch')
+    },
+    stopSearch: ({ commit }) => {
+      commit('stopSearch')
+    },
+    search: ({ state, commit }, payload) => {
+      state.speciesListCarts = [];
+      state.requestStatusPeople = false;
+      state.requestStatusSpecies = false;
+      state.counter = 0;
+      commit('search', payload)
+      let timerStatusPeople = setTimeout(function requestSpecies() {
+        if(state.requestStatusPeople === true){
+          commit('requestSpeciesAPI');
+          clearTimeout(timerStatusPeople);
+        }else{
+          setTimeout(requestSpecies, 1)
+        }
+      },1)
+      let timerStatusSpecies = setTimeout(function requestStatusSpeciesAPI() {
+        if(state.requestStatusSpecies === true){
+          commit('mergeArray')
+          clearTimeout(timerStatusSpecies);
+        }else{
+          setTimeout(requestStatusSpeciesAPI, 1)
+        }
+      },1)
+    },
+    descript: ({state, commit}, payload) => {
+      commit('descript', payload);
+      commit('receiveHomeWorld');
+      commit('receiveFilms')
+    },
+    closeDescript: ({ commit }) => {
+      commit('closeDescript');
+    },
+    //---------------------------------------
+    //---------------SearchPages component-----
+    searchPagination: ({ state, commit }, payload) => {
+      state.speciesListCarts = [];
+      state.requestStatusPeople = false;
+      state.requestStatusSpecies = false;
+      state.counter = 0;
+      commit('searchPagination', payload)
+      let timerStatusPeople = setTimeout(function requestSpecies() {
+        if(state.requestStatusPeople === true){
+          commit('requestSpeciesAPI');
+          clearTimeout(timerStatusPeople);
+        }else{
+          setTimeout(requestSpecies, 1)
+        }
+      },1)
+      let timerStatusSpecies = setTimeout(function requestStatusSpeciesAPI() {
+        if(state.requestStatusSpecies === true){
+          commit('mergeArray')
+          clearTimeout(timerStatusSpecies);
+        }else{
+          setTimeout(requestStatusSpeciesAPI, 1)
+        }
+      },1)
+    }
+    //-----------------------------------------
   },
 });

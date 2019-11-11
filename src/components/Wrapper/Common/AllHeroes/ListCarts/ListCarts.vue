@@ -23,8 +23,8 @@ export default{
 		}
 	},
 	methods: {
-		descript: function(people){
-			bus.$emit('modalWindow', people)
+		descript(people) {
+			this.$store.dispatch('descript', people)
 		}
 	},
 	computed: {

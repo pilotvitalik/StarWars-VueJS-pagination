@@ -1,7 +1,6 @@
 <template>
 	<div id='pages' class='left'>
-      <router-link :to="{ path: '/'}" @click.native="pagination('/')" active-class='active' tag='button' exact>1</router-link>
-      <router-link v-for='page in pages' @click.native='pagination(page.page)' :to="{ path: '/', query: { page: page.page } }" active-class='active' tag='button' :key='page.id' exact>{{page.page}}</router-link>
+      <router-link v-for='page in pages' @click.native='pagination(page)' :to="{ path: '/', query: { page: page } }" active-class='active' tag='button' :key='page' exact>{{page}}</router-link>
     </div>
 </template>
 
@@ -12,39 +11,21 @@ import {axios} from '../../../../main.js'
 export default{
 	data(){
 		return{
-			pages: [],
 		}
 	},
 	methods: {
 	  pagination (page) {
         this.$store.dispatch('pagination', page);
+        if (page === 1) {
+          this.$router.push({ path: '/' });
+        }
 	  },
 	},
-	created(){
-    axios
-        .get('https://swapi.co/api/people/')
-        .then(responsive =>{
-          let page = Math.round(responsive.data.count/10)
-          for(let i = 2; i < page+1; i++){
-              this.pages.push({
-                        page: i,
-                        isActive: false
-                      })
-          }
-          this.pages[0].isActive = true;
-        })
-        .catch(error => {
-              for(let i = 2; i < 10; i++){
-                this.pages.push({
-                            page: i,
-                            isActive: false
-                          })
-                
-              }
-              this.pages[0].isActive = true;
-              console.log(error)
-            })
-        },
+  computed: {
+    pages() {
+      return this.$store.state.listPages;
+    },
+  },
   }
 </script>
 

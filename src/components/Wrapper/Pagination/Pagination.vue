@@ -20,8 +20,12 @@ export default {
   },
   data() {
     return {
-      view: Pages
     };
+  },
+  computed: {
+    view() {
+      return this.$store.state.viewPages;
+    },
   },
   created(){
     bus.$on('search', data => {

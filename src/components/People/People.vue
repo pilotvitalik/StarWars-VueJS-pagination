@@ -1,13 +1,13 @@
 <template>
-  <div id="people" v-if = 'show'>
+  <div id="people" v-if = 'showPeople'>
     <div class='content'>
       <div class='close'>
-        <img :src='img' @click = 'close'>
+        <img :src='img' @click = 'closeDescript'>
       </div>
       <div class='name'>
         <ul>
-          <li><img :src='people[0].image'></li>
-          <li><span>{{people[0].name}}</span></li>
+          <li><img :src='people.image'></li>
+          <li><span>{{people.name}}</span></li>
         </ul>
         <span></span>
       </div>
@@ -17,21 +17,21 @@
             <ul>
               <li class='img'><img src='../../assets/common/calend.svg'></li>
               <li class='nameDesc'>Birth year</li>
-              <li class='desc'><span>{{people[0].birth}}</span></li>
+              <li class='desc'><span>{{people.birth_year}}</span></li>
             </ul>
           </li>
           <li>
             <ul>
               <li class='img'><img src='../../assets/common/ufo.svg'></li>
               <li class='nameDesc'>Species</li>
-              <li class='desc'><span>{{people[0].specie}}</span></li>
+              <li class='desc'><span>{{people.speciesName}}</span></li>
             </ul>
           </li>
           <li>
             <ul>
               <li class='img'><img src='../../assets/common/gender.svg'></li>
               <li class='nameDesc'>Gender</li>
-              <li class='desc'><span>{{people[0].gender}}</span></li>
+              <li class='desc'><span>{{people.gender}}</span></li>
             </ul>
           </li>
         </ul>
@@ -41,10 +41,10 @@
               <li class='img'><img src='../../assets/common/world.svg'></li>
               <li class='nameDesc'>Homeworld</li>
               <transition>
-              <PersonLoading v-if='this.showPersonLoading.home'></PersonLoading>
+              <PersonLoading v-if='animateLoadHome'></PersonLoading>
               </transition>
-              <li class='desc' v-if='!this.showPersonLoading.home'>
-                <span>{{people[0].planet}}</span>
+              <li class='desc' v-if='!animateLoadHome'>
+                <span>{{people.home}}</span>
               </li>
             </ul>
           </li>
@@ -53,10 +53,10 @@
               <li class='img'><img src='../../assets/common/film.svg'></li>
               <li class='nameDesc'>Films</li>
               <transition>
-                <PersonLoading  v-if='this.showPersonLoading.film' :class="{mobile: showPersonLoading.mobile}"></PersonLoading>
+                <PersonLoading  v-if='animateLoadFilms' :class="{mobile: showPersonLoading.mobile}"></PersonLoading>
               </transition>
-              <li class='desc'  v-if='!this.showPersonLoading.film' >
-                 <span v-for='film in people[0].film' :key='film.id'>{{film}}</span>
+              <li class='desc'  v-if='!animateLoadFilms' >
+                 <span v-for='film in people.nameFilms' :key='film.id'>{{film}}</span>
               </li>
             </ul>
           </li>
@@ -67,7 +67,8 @@
 </template>
 
 <script>
-import {bus} from '../../main.js'
+import {bus} from '../../main.js';
+import { mapGetters } from 'vuex';
 
 import closeBtn from '../../assets/common/closeBtn.png'
 import PersonLoading from '../Wrapper/Preloader/PersonLoading/personLoading.vue'
@@ -80,7 +81,6 @@ export default {
     return {
       img: closeBtn,
       show: false,
-      people: '',
       showPersonLoading: {
         home: true,
         film: true,
@@ -89,14 +89,26 @@ export default {
     };
   },
   methods: {
-    close: function(){
-      bus.$emit('showCom', false);
-      bus.$emit('blurWrap', '');
-      this.people = '';
-      this.showPersonLoading.film = false;
-      this.showPersonLoading.home = false;
-      this.show = false;
+    closeDescript() {
+      this.$store.dispatch('closeDescript')
     }
+  },
+  computed: {
+    ...mapGetters([
+      'showPeople'
+    ]),
+    people() {
+      return this.$store.state.descriptionList;
+    },
+    animateLoadHome() {
+      return this.$store.state.animateLoadHome;
+    },
+    animateLoadFilms() {
+      return this.$store.state.animateLoadFilms.film;
+    },
+    animateLoadOthers() {
+      return this.$store.state.animateLoadFilms.others;
+    },
   },
   created(){
     if(document.documentElement.clientWidth <= 549){

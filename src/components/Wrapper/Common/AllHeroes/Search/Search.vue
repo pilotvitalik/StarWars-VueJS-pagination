@@ -1,14 +1,15 @@
 <template>
 <div id='search' class='search lefts'>
 <input ref='input' type='text' v-model='searchTxt' @keyup = 'startSearch' @click = 'activateSearch'>
-<span class='title' :class="{clickSearch: isActive, active: isActive}">Search by name</span>
-<img :src='searchImg' :class="{clickImg: isActive, active: isActive, display: !isDisplay}">
-<i class="fa fa-times" aria-hidden="true" :class="{display: !isClose}" @click="stopSearch"></i>
+<span class='title' :class="{clickSearch: activeSearch, active: activeSearch}">Search by name</span>
+<img :src='searchImg' :class="{clickImg: activeSearch, active: activeSearch, display: !displaySearch}">
+<i class="fa fa-times" aria-hidden="true" :class="{display: !closeSearch}" @click="stopSearch"></i>
 </div>
 </template>
 
 <script>
-import { bus } from '../../../../../main'
+import { bus } from '../../../../../main';
+import { mapGetters } from 'vuex';
 
 import search from '../../../../../assets/common/search.svg';
 
@@ -18,49 +19,33 @@ export default {
       searchTxt: '',
       searchImg: search,
       isCreate: false,
-      isActive: false,
-      isDisplay: true,
-      isClose: false,
     };
   },
   methods: {
-    activateSearch: function() {
-      this.isActive = true;
-      this.isDisplay = false;
-      setTimeout(() => {
-        this.isDisplay = true;
-      }, 2900)
-       setTimeout(() => {
-        this.isClose = true;
-      }, 2900)
+    activateSearch() {
+      this.$store.dispatch('activeSearch');
     },
-    stopSearch: function(){
-      this.isActive = false;
-      this.isDisplay = true;
-      this.isClose = false;
+    stopSearch(){
+      this.$store.dispatch('stopSearch');
+    },
+    search(searchTxt){
+      this.$store.dispatch('search', searchTxt);
     }
+  },
+  computed: {
+    ...mapGetters([
+      'activeSearch',
+      'displaySearch',
+      'closeSearch',
+    ])
   },
   created(){
     //---------Start tarnsfer data, create SearchCarts---
       this.startSearch = this.$debounce(event => {
         this.$router.push({name: 'search', query: {result: this.searchTxt}})
-          if(this.searchTxt.length > 0){
-            bus.$emit('search', true);
-            if(this.isCreate == false){
-                bus.$emit('value', this.searchTxt);
-            }else{
-                bus.$emit('newValue', this.searchTxt);
-            }
-          }else{
-            bus.$emit('search', false);
-          }
+          this.search(this.searchTxt);
       }, 350)
     //-----------------------------------------------------
-    //------------Receive info from SearchCarts-----------
-      bus.$on('created', data => {
-        this.isCreate = data;
-      })
-    //--------------------------------------------------
     }
   }
 </script>

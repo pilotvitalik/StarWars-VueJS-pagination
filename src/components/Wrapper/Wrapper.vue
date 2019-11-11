@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper" :style='{filter: blur, pointerEvents: mouse}'>
+  <div id="wrapper" :style='{filter: showBlur, pointerEvents: mouse}'>
    <Preloader v-if='!showNavLists'></Preloader>
    <appHeader></appHeader>
    <router-view></router-view>
@@ -36,6 +36,7 @@ export default {
   computed: {
     ...mapGetters([
       'showNavLists',
+      'showBlur',
     ]),
   },
   created(){
@@ -47,9 +48,6 @@ export default {
       this.blur = data;
       this.mouse = '';
     });
-    bus.$on('sh', data => {
-      this.show = false
-    })
   },
 }
 </script>
