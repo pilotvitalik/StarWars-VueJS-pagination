@@ -46,11 +46,6 @@ export default {
       document.querySelector('body').style.overflowY = 'hidden';
       document.querySelector('body').style.pointerEvents = 'none';
       this.initialLoad();
-     //---------------Stop animation loading from ListCarts to SearchCarts---------
-      bus.$on('iShow', data => {
-        this.showLoadPagee = !data;
-      })
-     //----------------------------------------------------------------------------
     },
 };
 </script>
@@ -61,13 +56,12 @@ export default {
 .changeComponent-enter-active, .changeComponent-leave-active {
   transition: opacity 1s linear;
 }
-.changeComponent-enter, .changeComponent-leave-to
-/* .component-fade-leave-active below version 2.1.8 */ {
+.changeComponent-enter, .changeComponent-leave-to{
   opacity: 0;
 }
 
 .slide-fade-enter-active {
-  transition: all 2.5s ease;
+  transition: all 2s ease;
 }
 .slide-fade-enter{
   transform: translateY(100px);
@@ -145,42 +139,45 @@ export default {
 			height: auto;
 			padding: 0;
 			&>li{
-				display: flex;
-				flex-direction: column;
-				align-items: center;
+				display: block;
 				position: relative;
-				background: #1a1a1a;
-					&>span{
-						display: inline-block;
-						position: absolute;
-						color: #fff;
-						font-family: 'Roboto', sans-serif;
-						font-weight: bold;
-						z-index: 111;
-					}
-				
-					ul{
+					&>#namePerson{
 						display: flex;
 						flex-direction: column;
-						justify-content: space-between;
+						align-items: center;
 						position: relative;
-						li:first-child{
-							display: block;
-							position: relative;
-							width: 80*(80/100*130)/100%;
-              margin: 0 auto;
-							border-radius: 50%;
-							overflow: hidden;
-							background: #1a1a1a;
-						}
-						li:last-child{
-							display: inline-block;
-							position: relative;
-							width: 100%;
-							color: #808080;
-							font-family: 'Roboto', sans-serif;
-							text-align: center;
-						}
+						background: #1a1a1a;
+					  span{
+					  	display: inline-block;
+					  	position: absolute;
+					  	color: #fff;
+					  	font-family: 'Roboto', sans-serif;
+					  	font-weight: bold;
+					  	z-index: 111;
+					  }
+					  ul{
+					  	display: flex;
+					  	flex-direction: column;
+					  	justify-content: space-between;
+					  	position: relative;
+					  	li:first-child{
+					  		display: block;
+					  		position: relative;
+					  		width: 80px;
+					        margin: 0 auto;
+					  		border-radius: 50%;
+					  		overflow: hidden;
+					  		background: #1a1a1a;
+					  	}
+					  	li:last-child{
+					  		display: inline-block;
+					  		position: relative;
+					  		width: 100%;
+					  		color: #808080;
+					  		font-family: 'Roboto', sans-serif;
+					  		text-align: center;
+					  	}
+					  }
 					}
 			}
 			&>li:hover{
@@ -227,24 +224,29 @@ export default {
 					margin-bottom: 32px;
 					border-radius: 8px;
 					box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-						&>span{
-							font-size: 18px;
-							line-height: 21px;
-							top: 183px;
-						}
-						ul{
-							width: 80/100*130px;
-							height: 135px;
-							top: 93px;
-							li:first-child{
-								height: 80px;
-							}
-							li:last-child{
-								height: 15px;
-								margin: 0;
-								font-size: 13px;
-								line-height: 15px;
-							}
+						&>#namePerson{
+							width: 100%;
+							height: inherit;
+							border-radius: 8px;
+						 span{
+						 	font-size: 18px;
+						 	line-height: 21px;
+						 	top: 183px;
+						 }
+						 ul{
+						 	width: 80/100*130px;
+						 	height: 135px;
+						 	top: 93px;
+						 	li:first-child{
+						 		height: 80px;
+						 	}
+						 	li:last-child{
+						 		height: 15px;
+						 		margin: 0;
+						 		font-size: 13px;
+						 		line-height: 15px;
+						 	}
+						 } 
 						}
 				}
 				&>li:hover{
@@ -292,23 +294,28 @@ export default {
 					margin-bottom: 24px;
 					border-radius: 8px;
 					box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-						&>span{
-							font-size: 18px;
-							line-height: 21px;
-							top: 123px;
-						}
-						ul{
-							width: 80px;
-							height: 135px;
-							top: 33px;
-							li:first-child{
-								height: 80px;
+						&>#namePerson{
+							width: 100%;
+							height: inherit;
+							border-radius: 8px;
+							span{
+								font-size: 18px;
+								line-height: 21px;
+								top: 123px;
 							}
-							li:last-child{
-								height: 15px;
-								margin: 0;
-								font-size: 13px;
-								line-height: 15px;
+							ul{
+								width: 80px;
+								height: 135px;
+								top: 33px;
+								li:first-child{
+									height: 80px;
+								}
+								li:last-child{
+									height: 15px;
+									margin: 0;
+									font-size: 13px;
+									line-height: 15px;
+								}
 							}
 						}
 				}

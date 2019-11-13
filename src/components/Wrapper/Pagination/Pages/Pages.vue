@@ -1,13 +1,11 @@
 <template>
 	<div id='pages' class='left'>
+    <router-link @click.native='pagination(1)' :to="{ path: '/'}" active-class='active' tag='button' :key='1' exact>1</router-link>
       <router-link v-for='page in pages' @click.native='pagination(page)' :to="{ path: '/', query: { page: page } }" active-class='active' tag='button' :key='page' exact>{{page}}</router-link>
     </div>
 </template>
 
 <script>
-import {bus} from '../../../../main.js'
-import {axios} from '../../../../main.js'
-
 export default{
 	data(){
 		return{
@@ -15,16 +13,16 @@ export default{
 	},
 	methods: {
 	  pagination (page) {
-        this.$store.dispatch('pagination', page);
-        if (page === 1) {
-          this.$router.push({ path: '/' });
-        }
+      this.$store.dispatch('pagination', page);
 	  },
 	},
   computed: {
     pages() {
       return this.$store.state.listPages;
     },
+    /*isActive() {
+      return this.$store.state.isActive;
+    },*/
   },
   }
 </script>

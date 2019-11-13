@@ -7,9 +7,6 @@
 </template>
 
 <script>
-import {bus} from '../../../main.js'
-import {axios} from '../../../main.js'
-
 import Pages from './Pages/Pages.vue'
 import SearchPages from './SearchPages/SearchPages.vue'
 
@@ -27,15 +24,6 @@ export default {
       return this.$store.state.viewPages;
     },
   },
-  created(){
-    bus.$on('search', data => {
-        if(data == true){
-          this.view = SearchPages;
-        }else{
-          this.view = Pages;
-        }
-       })
-  }
 }
 </script>
 
@@ -73,13 +61,16 @@ export default {
     }
     .active,
     button:hover{
-        cursor: pointer;
-        color: #fff;
+        cursor: pointer !important;
+        color: #fff !important;
         text-shadow: 0 0 20px rgb(255,224,27), 
                      0 0 20px rgb(255,224,27),
                      0 0 20px rgb(255,224,27),
                      0 0 20px rgb(255,224,27),
-                     0 0 20px rgb(255,224,27);
+                     0 0 20px rgb(255,224,27)  !important;
+    }
+    .nonActive{
+      color: red;
     }
   }
 }

@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import {bus} from '../../../../main.js'
-
 export default{
 	data(){
 		return{
@@ -26,11 +24,11 @@ export default{
 	justify-content: center;
 	position: absolute;
 	width: 100%;
-	height: 100px;
+	height: 100%;
 	bottom: 0;
-	background: transparent;
+	border-radius: 8px;
+	background: #1a1a1a;
 	z-index: 1000;
-	opacity: 0.5;
 	svg{
 		position: relative;
 		width: 80px;

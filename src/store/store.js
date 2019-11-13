@@ -35,6 +35,7 @@ export const store = new Vuex.Store({ // eslint-disable-line
     speciesListCarts: [],
     listCarts: '',
     listCharacters: '',
+    searchListCharacters: '',
     showNavLists: false,
     showLoadPage: false,
     requestStatusPeople: false,
@@ -43,6 +44,7 @@ export const store = new Vuex.Store({ // eslint-disable-line
     counter: 0,
     view: 'ListCarts',
     viewPages: 'Pages',
+    viewNameCarts: 'NamePerson',
     //-------------Search component----------
     isActiveSearch: false,
     isDisplaySearch: true,
@@ -50,6 +52,7 @@ export const store = new Vuex.Store({ // eslint-disable-line
     //---------------------------------------
     //----------------Pages-------------------
     listPages: [],
+    isActive: false,
     //----------------------------------------
     //-------------SearchPages component----------
     searchPages: [],
@@ -60,11 +63,13 @@ export const store = new Vuex.Store({ // eslint-disable-line
     blur: '',
     showPeople: false,
     animateLoadHome: false,
+    showHome: false,
     statusReceiveHome: false,
     animateLoadFilms: {
       film: false,
       others: false,
     },
+    showFilms: false,
     statusReceiveFilms: false,
     //---------------------------------------
   },
@@ -116,10 +121,13 @@ export const store = new Vuex.Store({ // eslint-disable-line
     requestPeopleAPI: (state) => {
       let tmpPeople = '';
       Vue.http.get(state.peopleAPI).then((response) => {
-        let pages = (Math.ceil(response.body.count / 10) + 1);
-        for (let i = 1; i < pages; i++) {
-          state.listPages.push(i);
+        if (state.isActive === false) {
+          let pages = (Math.ceil(response.body.count / 10) + 1);
+          for (let i = 2; i < pages; i++) {
+            state.listPages.push(i);
+          }
         }
+        state.isActive = true;
         state.requestStatusPeople = response.ok;
         tmpPeople = response.body.results;
         tmpPeople.forEach((itemPeople) => {
@@ -197,8 +205,15 @@ export const store = new Vuex.Store({ // eslint-disable-line
           });
         });
       });
-      state.listCharacters = state.listCarts;
+      if (state.isActiveSearch === false) {
+        state.listCharacters = state.listCarts;
+      } else{
+        state.searchListCharacters = state.listCarts;
+      }
       state.mergeStatusArray = true;
+      if (state.viewNameCarts === 'LoadingPage') {
+        state.viewNameCarts = 'NamePerson';
+      }
     },
     defaultWidth: () => {
       document.querySelector('body').style.overflowY = 'auto';
@@ -262,14 +277,17 @@ export const store = new Vuex.Store({ // eslint-disable-line
       state.isActiveSearch = false;
       state.isDisplaySearch = true;
       state.isCloseSearch = false;
+      state.view = 'ListCarts';
+      state.viewPages = 'Pages';    
     },
     search: (state, payload) => {
       state.view = 'SearchCarts';
+      state.isActive = false;
       state.viewPages = 'SearchPages';
       state.searchPages = [];
       let tmpPeople = '';
             Vue.http.get(state.searchAPI + payload).then((response) => {
-              for(let i = 1; i < Math.ceil(response.body.count/10) + 1;i++){
+              for(let i = 2; i < Math.ceil(response.body.count/10) + 1;i++){
                 state.searchPages.push(i);
               }
               state.searchResult = payload;
@@ -293,6 +311,8 @@ export const store = new Vuex.Store({ // eslint-disable-line
     //---------------------------------------
     //-------------People component----------
     descript: (state, payload) => {
+      let time = new Date();
+      console.log('descript done --- ' + (time.getTime() - 1573400000000))
       state.showPeople = true;
       state.animateLoadHome = true;
       state.animateLoadFilms.film = true;
@@ -305,14 +325,23 @@ export const store = new Vuex.Store({ // eslint-disable-line
       state.descriptionList.nameFilms = '';
     },
     receiveHomeWorld: (state) => {
+      let time = new Date();
+      console.log('receiveHomeWorld done --- ' + (time.getTime() - 1573400000000))
+      let home = '';
       Vue.http.get(state.descriptionList.homeworld).then(response => {
         if(response.ok == true){
-          state.descriptionList.home = response.body.name
           state.animateLoadHome = false
+          state.descriptionList.home = response.body.name;
+          setTimeout(() => {
+            state.showHome = true;
+          }, 350)       
+          console.log('animateLoadHome ' + state.animateLoadHome + ' --- ' + (time.getTime() - 1573400000000))
         }
       })
     },
     receiveFilms: (state) => {
+      let time = new Date();
+      console.log('receiveFilms done --- ' + (time.getTime() - 1573400000000))
       let arrFilms = [];
       let counterFilms = 0;
       for(let i = 0; i < state.descriptionList.films.length; i++){
@@ -322,9 +351,12 @@ export const store = new Vuex.Store({ // eslint-disable-line
             arrFilms.push(response.data.title);
           }
           if(counterFilms === state.descriptionList.films.length){
-            state.descriptionList.nameFilms = arrFilms;
             state.animateLoadFilms.film = false;
             state.animateLoadFilms.others = false;
+            state.descriptionList.nameFilms = arrFilms;
+            setTimeout(() => {
+              state.showFilms = true;
+            }, 350)
           }
         })
       }
@@ -335,6 +367,8 @@ export const store = new Vuex.Store({ // eslint-disable-line
       state.animateLoadFilms.film = false;
       state.animateLoadHome = false;
       state.showPeople = false;
+      state.showHome = false;
+      state.showFilms = false;
       document.querySelector('body').style.overflowY = 'auto';
       let withScroll = document.documentElement.clientWidth
         let outScroll = window.innerWidth
@@ -411,7 +445,8 @@ export const store = new Vuex.Store({ // eslint-disable-line
       state.requestStatusPeople = false;
       state.requestStatusSpecies = false;
       state.counter = 0;
-      if(payload === '/'){
+      state.viewNameCarts = 'LoadingPage';
+      if(payload === 1){
         commit('requestPeopleAPI');
       } else {
         commit('pagination', payload);
@@ -441,27 +476,31 @@ export const store = new Vuex.Store({ // eslint-disable-line
       commit('stopSearch')
     },
     search: ({ state, commit }, payload) => {
-      state.speciesListCarts = [];
-      state.requestStatusPeople = false;
-      state.requestStatusSpecies = false;
-      state.counter = 0;
-      commit('search', payload)
-      let timerStatusPeople = setTimeout(function requestSpecies() {
-        if(state.requestStatusPeople === true){
-          commit('requestSpeciesAPI');
-          clearTimeout(timerStatusPeople);
-        }else{
-          setTimeout(requestSpecies, 1)
-        }
-      },1)
-      let timerStatusSpecies = setTimeout(function requestStatusSpeciesAPI() {
-        if(state.requestStatusSpecies === true){
-          commit('mergeArray')
-          clearTimeout(timerStatusSpecies);
-        }else{
-          setTimeout(requestStatusSpeciesAPI, 1)
-        }
-      },1)
+      if (payload.length === 0){
+        commit('stopSearch')
+      } else {
+        state.speciesListCarts = [];
+        state.requestStatusPeople = false;
+        state.requestStatusSpecies = false;
+        state.counter = 0;
+        commit('search', payload)
+        let timerStatusPeople = setTimeout(function requestSpecies() {
+          if(state.requestStatusPeople === true){
+            commit('requestSpeciesAPI');
+            clearTimeout(timerStatusPeople);
+          }else{
+            setTimeout(requestSpecies, 1)
+          }
+        },1)
+        let timerStatusSpecies = setTimeout(function requestStatusSpeciesAPI() {
+          if(state.requestStatusSpecies === true){
+            commit('mergeArray')
+            clearTimeout(timerStatusSpecies);
+          }else{
+            setTimeout(requestStatusSpeciesAPI, 1)
+          }
+        },1)
+      }
     },
     descript: ({state, commit}, payload) => {
       commit('descript', payload);

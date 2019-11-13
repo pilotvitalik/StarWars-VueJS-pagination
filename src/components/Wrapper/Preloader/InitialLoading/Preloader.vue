@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import {bus} from '../../../../main.js'
-
 export default{
 	data(){
 		return{
@@ -19,18 +17,6 @@ export default{
 			request: false,
 			isAnimate: false
 		}
-	},
-	created(){
-		bus.$on('people', data => {
-			this.request = data;
-			this.$nextTick(function() {
-				if(this.request == true){
-					this.isAnimate = this.request;
-				}else{
-					this.isAnimate = false
-				}
-			})
-		})
 	},
 }
 </script>

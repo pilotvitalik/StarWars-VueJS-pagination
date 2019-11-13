@@ -43,8 +43,8 @@
               <transition>
               <PersonLoading v-if='animateLoadHome'></PersonLoading>
               </transition>
-              <li class='desc' v-if='!animateLoadHome'>
-                <span>{{people.home}}</span>
+              <li class='desc' v-if='showHome'>
+                  <span>{{people.home}}</span>
               </li>
             </ul>
           </li>
@@ -53,9 +53,9 @@
               <li class='img'><img src='../../assets/common/film.svg'></li>
               <li class='nameDesc'>Films</li>
               <transition>
-                <PersonLoading  v-if='animateLoadFilms' :class="{mobile: showPersonLoading.mobile}"></PersonLoading>
+                <PersonLoading  v-if='animateLoadFilms' :class="{mobile: animateLoadOthers}"></PersonLoading>
               </transition>
-              <li class='desc'  v-if='!animateLoadFilms' >
+              <li class='desc'  v-if='showFilms' >
                  <span v-for='film in people.nameFilms' :key='film.id'>{{film}}</span>
               </li>
             </ul>
@@ -80,10 +80,7 @@ export default {
   data() {
     return {
       img: closeBtn,
-      show: false,
       showPersonLoading: {
-        home: true,
-        film: true,
         mobile: false
       }
     };
@@ -91,7 +88,7 @@ export default {
   methods: {
     closeDescript() {
       this.$store.dispatch('closeDescript')
-    }
+    },
   },
   computed: {
     ...mapGetters([
@@ -109,37 +106,17 @@ export default {
     animateLoadOthers() {
       return this.$store.state.animateLoadFilms.others;
     },
+    showHome() {
+      return this.$store.state.showHome;
+    },
+    showFilms() {
+      return this.$store.state.showFilms;
+    },
   },
   created(){
     if(document.documentElement.clientWidth <= 549){
       this.showPersonLoading.mobile = true
-    }
-    bus.$on('show', data => {
-        this.show = data;
-    });
-    bus.$on('add', data =>{
-     this.people = data;
-     this.$nextTick(() => {
-     this.showPersonLoading.home = true;
-     this.showPersonLoading.film = true;
-     })
-    });
-    bus.$on('planet', data => {
-      setTimeout(() => {
-              this.showPersonLoading.home = false;
-            }, 1500)
-            setTimeout(() => {
-              this.people[0].planet = data
-            }, 1800)
-      })
-    bus.$on('films', data => {
-      setTimeout(() => {
-              this.showPersonLoading.film = false;
-            }, 1500)
-            setTimeout(() => {
-              this.people[0].film = data;
-            }, 1800)
-      })
+    };    
   },
 };
 </script>
