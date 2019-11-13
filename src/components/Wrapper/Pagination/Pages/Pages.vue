@@ -20,9 +20,6 @@ export default{
     pages() {
       return this.$store.state.listPages;
     },
-    /*isActive() {
-      return this.$store.state.isActive;
-    },*/
   },
   }
 </script>

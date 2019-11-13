@@ -2,7 +2,7 @@
   <div id="people" v-if = 'showPeople'>
     <div class='content'>
       <div class='close'>
-        <img :src='img' @click = 'closeDescript'>
+        <img :src='closeBtn' @click = 'closeDescript'>
       </div>
       <div class='name'>
         <ul>
@@ -53,7 +53,7 @@
               <li class='img'><img src='../../assets/common/film.svg'></li>
               <li class='nameDesc'>Films</li>
               <transition>
-                <PersonLoading  v-if='animateLoadFilms' :class="{mobile: animateLoadOthers}"></PersonLoading>
+                <PersonLoading  v-if='animateLoadFilms'></PersonLoading>
               </transition>
               <li class='desc'  v-if='showFilms' >
                  <span v-for='film in people.nameFilms' :key='film.id'>{{film}}</span>
@@ -67,10 +67,8 @@
 </template>
 
 <script>
-import {bus} from '../../main.js';
 import { mapGetters } from 'vuex';
 
-import closeBtn from '../../assets/common/closeBtn.png'
 import PersonLoading from '../Wrapper/Preloader/PersonLoading/personLoading.vue'
 
 export default {
@@ -79,10 +77,6 @@ export default {
   },
   data() {
     return {
-      img: closeBtn,
-      showPersonLoading: {
-        mobile: false
-      }
     };
   },
   methods: {
@@ -103,20 +97,15 @@ export default {
     animateLoadFilms() {
       return this.$store.state.animateLoadFilms.film;
     },
-    animateLoadOthers() {
-      return this.$store.state.animateLoadFilms.others;
-    },
     showHome() {
       return this.$store.state.showHome;
     },
     showFilms() {
       return this.$store.state.showFilms;
     },
-  },
-  created(){
-    if(document.documentElement.clientWidth <= 549){
-      this.showPersonLoading.mobile = true
-    };    
+    closeBtn() {
+      return this.$store.state.closeBtn;
+    }
   },
 };
 </script>

@@ -26,8 +26,9 @@ export default {
     },
     stopSearch(){
       this.$store.dispatch('stopSearch');
-      this.$router.push({ path: '/' })
+      this.$router.back();
       this.searchTxt = '';
+      this.$refs.input.onblur = true;
     },
     search(searchTxt){
       this.$store.dispatch('search', searchTxt);
@@ -46,7 +47,7 @@ export default {
         this.$router.push({name: 'search', query: {result: this.searchTxt}})
         this.search(this.searchTxt);
         if (this.searchTxt.length === 0){
-          this.$router.push({ path: '/' })
+          this.$router.push({ name: 'search' })
         }
       }, 350)
     //-----------------------------------------------------

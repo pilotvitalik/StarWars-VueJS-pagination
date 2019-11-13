@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import {bus} from '../../../../main.js';
 import { mapGetters } from 'vuex';
 
 import ListCarts from './ListCarts/ListCarts.vue'
