@@ -1,13 +1,14 @@
 <template>
-<div id='search' class='search lefts'>
-<input ref='input' type='text' v-model='searchTxt' @keyup = 'startSearch' @click = 'activateSearch'>
-<span class='title' :class="{clickSearch: activeSearch, active: activeSearch}">Search by name</span>
-<img :src='searchImg' :class="{clickImg: activeSearch, active: activeSearch, display: !displaySearch}">
-<i class="fa fa-times" aria-hidden="true" :class="{display: !closeSearch}" @click="stopSearch"></i>
-</div>
+ <div id='search' class='search lefts'>
+  <input ref='input' type='text' v-model='searchTxt' @keyup = 'startSearch' @click = 'activeSearch'>
+  <span class='title' :class="spanClass">Search by name</span>
+  <img :src='searchImg' :class="imageClass">
+  <i class="fa fa-times" aria-hidden="true" :class="searchImgClass" @click="stopSearch"></i>
+ </div>
 </template>
 
 <script>
+/* eslint-disable */
 import { mapGetters } from 'vuex';
 
 import search from '../../../../../assets/common/search.svg';
@@ -17,42 +18,58 @@ export default {
     return {
       searchTxt: '',
       searchImg: search,
-      isCreate: false,
     };
   },
   methods: {
-    activateSearch() {
+    activeSearch() {
       this.$store.dispatch('activeSearch');
     },
-    stopSearch(){
-      this.$store.dispatch('stopSearch');
+    stopSearch() {
+      this.$store.dispatch('stopSearch', this.$route);
       this.$router.back();
       this.searchTxt = '';
       this.$refs.input.onblur = true;
     },
-    search(searchTxt){
+    search(searchTxt) {
       this.$store.dispatch('search', searchTxt);
-    }
+    },
   },
   computed: {
     ...mapGetters([
-      'activeSearch',
+      'activateSearch',
       'displaySearch',
       'closeSearch',
-    ])
-  },
-  created(){
-    //---------Start tarnsfer data, create SearchCarts---
-      this.startSearch = this.$debounce(event => {
-        this.$router.push({name: 'search', query: {result: this.searchTxt}})
-        this.search(this.searchTxt);
-        if (this.searchTxt.length === 0){
-          this.$router.push({ name: 'search' })
-        }
-      }, 350)
-    //-----------------------------------------------------
+    ]),
+    spanClass: function() {
+      return{
+        clickSearch: this.activateSearch,
+        active: this.activateSearch,
+      };
     },
-  }
+    imageClass: function() {
+      return{
+        clickImg: this.activateSearch,
+        display: !this.displaySearch,
+        active: this.activateSearch,
+      };
+    },
+    searchImgClass() {
+      return {display: !this.closeSearch};
+    },
+  },
+  created() {
+    this.startSearch = this.$debounce(event => { // eslint-disable-line
+      if (this.searchTxt.length !== 0) {
+        this.$router.push({ name: 'search', query: { result: this.searchTxt } });
+        this.search(this.searchTxt);
+      } else {
+        if (event.code === 'Backspace') {
+          this.$router.push({ name: 'search' });
+        }
+      }
+    }, 350);
+  },
+};
 </script>
 
 <style lang='less' scoped>

@@ -69,11 +69,11 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import PersonLoading from '../Wrapper/Preloader/PersonLoading/personLoading.vue'
+import PersonLoading from '../Wrapper/Preloader/PersonLoading/personLoading.vue';
 
 export default {
-  components:{
-    PersonLoading: PersonLoading,
+  components: {
+    PersonLoading,
   },
   data() {
     return {
@@ -81,12 +81,12 @@ export default {
   },
   methods: {
     closeDescript() {
-      this.$store.dispatch('closeDescript')
+      this.$store.dispatch('closeDescript');
     },
   },
   computed: {
     ...mapGetters([
-      'showPeople'
+      'showPeople',
     ]),
     people() {
       return this.$store.state.descriptionList;
@@ -105,7 +105,7 @@ export default {
     },
     closeBtn() {
       return this.$store.state.closeBtn;
-    }
+    },
   },
 };
 </script>
@@ -383,7 +383,7 @@ export default {
       .nameDesc{
         margin-left: 11px;
         font-size: 18px;
-        line-height: 21px;  
+        line-height: 21px;
       }
       .desc{
         width: 120px;
@@ -505,7 +505,7 @@ export default {
       .nameDesc{
         margin-left: 11px;
         font-size: 18px;
-        line-height: 21px;  
+        line-height: 21px;
       }
       .desc{
         width: 120px;
@@ -629,7 +629,7 @@ export default {
       .nameDesc{
         margin-left: 11px;
         font-size: 16px;
-        line-height: 19px;  
+        line-height: 19px;
       }
       .desc{
         width: 0px;
@@ -753,7 +753,7 @@ export default {
       .nameDesc{
         margin-left: 11px;
         font-size: 16px;
-        line-height: 19px;  
+        line-height: 19px;
       }
       .desc{
         width: 0px;

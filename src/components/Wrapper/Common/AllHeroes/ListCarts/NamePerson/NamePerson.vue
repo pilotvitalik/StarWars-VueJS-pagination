@@ -3,19 +3,19 @@
     <span>{{people.name}}</span>
     <ul>
       <li><img v-bind:src="people.image"/></li>
-	    <li>{{people.speciesName}}</li>
-	  </ul>
+      <li>{{people.speciesName}}</li>
+    </ul>
   </div>
 </template>
 
 <script>
-export default{
+export default {
   props: ['people'],
   data() {
-  	return {
-  	}
+    return {
+    };
   },
-}
+};
 </script>
 
 <style lang='less'>

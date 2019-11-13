@@ -1,16 +1,16 @@
 <template>
-	<div id='common'>
-		<AllHeroes></AllHeroes>
-	</div>
+  <div id='common'>
+    <AllHeroes/>
+  </div>
 </template>
 
 <script>
-import AllHeroes from './AllHeroes/AllHeroes.vue'
+import AllHeroes from './AllHeroes/AllHeroes.vue';
 
 export default {
-	components: {
-		AllHeroes: AllHeroes,
-	},
+  components: {
+    AllHeroes,
+  },
   data() {
     return {
     };
@@ -21,6 +21,6 @@ export default {
 
 <style lang='less' scoped>
 #common{
-	border: none;
+  border: none;
 }
 </style>
