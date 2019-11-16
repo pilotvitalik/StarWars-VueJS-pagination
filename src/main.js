@@ -1,27 +1,36 @@
 import Vue from 'vue';
-import App from './App.vue';
-import VueResource from 'vue-resource'
-import VueRouter from 'vue-router'
-import Routes from './Routers.js'
+import VueResource from 'vue-resource';
+import VueRouter from 'vue-router';
 import debounce from 'lodash.debounce';
-import { store } from './store/store';
+import firebase from 'firebase/app';
+import storage from 'firebase/storage'; // eslint-disable-line
+import { store } from './store/store'; // eslint-disable-line
+import Routes from './Routers';
+import App from './App.vue';
 
 Vue.config.productionTip = false;
 
 export const bus = new Vue();
-export const axios = require('axios');
 Vue.prototype.$debounce = debounce;
 
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-	routes: Routes,
-	mode: 'history'
-	});
+  routes: Routes,
+  mode: 'history',
+});
+
+const firebaseApp = firebase.initializeApp({
+//Insert your config Firebase
+});
+
+const storageRef = firebaseApp.storage().ref();
+
+export default storageRef;
 
 new Vue({
-	store,
+  store,
   render: h => h(App),
-  router: router,
+  router,
 }).$mount('#app');

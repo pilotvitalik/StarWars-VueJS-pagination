@@ -15,21 +15,21 @@
         <ul class = 'firstPart'>
           <li>
             <ul>
-              <li class='img'><img src='../../assets/common/calend.svg'></li>
+              <li class='img'><img :src='calendImg'></li>
               <li class='nameDesc'>Birth year</li>
               <li class='desc'><span>{{people.birth_year}}</span></li>
             </ul>
           </li>
           <li>
             <ul>
-              <li class='img'><img src='../../assets/common/ufo.svg'></li>
+              <li class='img'><img :src='ufoImg'></li>
               <li class='nameDesc'>Species</li>
               <li class='desc'><span>{{people.speciesName}}</span></li>
             </ul>
           </li>
           <li>
             <ul>
-              <li class='img'><img src='../../assets/common/gender.svg'></li>
+              <li class='img'><img :src='genderImg'></li>
               <li class='nameDesc'>Gender</li>
               <li class='desc'><span>{{people.gender}}</span></li>
             </ul>
@@ -38,7 +38,7 @@
         <ul class='secondPart'>
           <li>
             <ul>
-              <li class='img'><img src='../../assets/common/world.svg'></li>
+              <li class='img'><img :src='worldImg'></li>
               <li class='nameDesc'>Homeworld</li>
               <transition>
               <PersonLoading v-if='animateLoadHome'></PersonLoading>
@@ -50,7 +50,7 @@
           </li>
           <li>
             <ul>
-              <li class='img'><img src='../../assets/common/film.svg'></li>
+              <li class='img'><img :src='filmImg'></li>
               <li class='nameDesc'>Films</li>
               <transition>
                 <PersonLoading  v-if='animateLoadFilms'></PersonLoading>
@@ -105,6 +105,21 @@ export default {
     },
     closeBtn() {
       return this.$store.state.closeBtn;
+    },
+    calendImg() {
+      return this.$store.state.calendImg;
+    },
+    filmImg() {
+      return this.$store.state.filmImg;
+    },
+    genderImg() {
+      return this.$store.state.genderImg;
+    },
+    ufoImg() {
+      return this.$store.state.ufoImg;
+    },
+    worldImg() {
+      return this.$store.state.worldImg;
     },
   },
 };

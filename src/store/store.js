@@ -1,34 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
-import lukeSkywalker from '../assets/common/peoples/lukeSkywalker.png';
-import c3PO from '../assets/common/peoples/c3PO.png';
-import r2D2 from '../assets/common/peoples/r2D2.png';
-import darthVader from '../assets/common/peoples/darthVader.png';
-import leiaOrgana from '../assets/common/peoples/leiaOrgana.png';
-import owenLars from '../assets/common/peoples/owenLars.png';
-import beruWhitesunlars from '../assets/common/peoples/beruWhitesunlars.png';
-import r5D4 from '../assets/common/peoples/r5D4.png';
-import biggsDarklighter from '../assets/common/peoples/biggsDarklighter.png';
-import obiWanKenobi from '../assets/common/peoples/obiWanKenobi.png';
-import closeButton from '../assets/common/closeBtn.png';
+import storageRef from '../main'; // eslint-disable-line
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({ // eslint-disable-line
   state: {
-    images: [
-      lukeSkywalker,
-      c3PO,
-      r2D2,
-      darthVader,
-      leiaOrgana,
-      owenLars,
-      beruWhitesunlars,
-      r5D4,
-      biggsDarklighter,
-      obiWanKenobi,
-    ],
+    images: '',
     peopleAPI: 'https://swapi.co/api/people/',
     pagesAPI: 'https://swapi.co/api/people/?page=',
     searchAPI: 'https://swapi.co/api/people/?search=',
@@ -51,6 +29,7 @@ export const store = new Vuex.Store({ // eslint-disable-line
     isActiveSearch: false,
     isDisplaySearch: true,
     isCloseSearch: false,
+    searchImg: '',
     // ---------------------------------------
     // ----------------Pages-------------------
     listPages: [],
@@ -73,7 +52,12 @@ export const store = new Vuex.Store({ // eslint-disable-line
     },
     showFilms: false,
     statusReceiveFilms: false,
-    closeBtn: closeButton,
+    closeBtn: '',
+    calendImg: '',
+    filmImg: '',
+    genderImg: '',
+    ufoImg: '',
+    worldImg: '',
     // ---------------------------------------
   },
   getters: {
@@ -110,15 +94,47 @@ export const store = new Vuex.Store({ // eslint-disable-line
     // ---------------------------------------
   },
   mutations: {
-    changeImages: (state) => {
-      state.images = state.images.map((item) => { // eslint-disable-line
-        return {
-          url: item,
-          imageName: '',
-        };
+    loadingImages: (state) => {
+      storageRef.child('UI/search/search.svg').getDownloadURL().then((url) => {
+        state.searchImg = url;
       });
-      state.images.forEach((item) => {
-        item.imageName = item.url.slice(5, item.url.indexOf('.')); // eslint-disable-line
+      storageRef.child('UI/descriptPerson/closeBtn.png').getDownloadURL().then((url) => {
+        state.closeBtn = url;
+      });
+      storageRef.child('UI/descriptPerson/calend.svg').getDownloadURL().then((url) => {
+        state.calendImg = url;
+      });
+      storageRef.child('UI/descriptPerson/film.svg').getDownloadURL().then((url) => {
+        state.filmImg = url;
+      });
+      storageRef.child('UI/descriptPerson/gender.svg').getDownloadURL().then((url) => {
+        state.genderImg = url;
+      });
+      storageRef.child('UI/descriptPerson/ufo.svg').getDownloadURL().then((url) => {
+        state.ufoImg = url;
+      });
+      storageRef.child('UI/descriptPerson/world.svg').getDownloadURL().then((url) => {
+        state.worldImg = url;
+      });
+    },
+    changeImages: (state) => {
+      let tempImage = [];
+      storageRef.child('people').listAll().then((response) => {
+        tempImage = response.items.map((item) => {
+          let index = '';
+          index = item.name.indexOf('.');
+          return {
+            imageName: item.name.slice(0, index),
+            imageURL: item.fullPath,
+            url: '',
+          };
+        });
+        tempImage.forEach((item) => {
+          storageRef.child(item.imageURL).getDownloadURL().then((url) => {
+            item.url = url; // eslint-disable-line
+          });
+        });
+        state.images = tempImage;
       });
     },
     requestPeopleAPI: (state) => {
@@ -435,12 +451,20 @@ export const store = new Vuex.Store({ // eslint-disable-line
   },
   actions: {
     initialLoad: ({ state, commit }, payload) => {
+      commit('loadingImages');
       commit('changeImages');
-      if (payload.fullPath === '/') {
-        commit('requestPeopleAPI');
-      } else {
-        commit('pagination', payload.query.page);
-      }
+      const timerStatusImages = setTimeout(function requestImages() {
+        if (state.images !== '') {
+          if (payload.fullPath === '/') {
+            commit('requestPeopleAPI');
+          } else {
+            commit('pagination', payload.query.page);
+          }
+          clearTimeout(timerStatusImages);
+        } else {
+          setTimeout(requestImages, 1);
+        }
+      }, 1);
       const timerStatusPeople = setTimeout(function requestSpecies() {
         if (state.requestStatusPeople === true) {
           commit('requestSpeciesAPI');

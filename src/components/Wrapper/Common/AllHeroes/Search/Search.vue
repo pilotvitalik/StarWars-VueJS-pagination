@@ -11,13 +11,10 @@
 /* eslint-disable */
 import { mapGetters } from 'vuex';
 
-import search from '../../../../../assets/common/search.svg';
-
 export default {
   data() {
     return {
       searchTxt: '',
-      searchImg: search,
     };
   },
   methods: {
@@ -55,6 +52,9 @@ export default {
     },
     searchImgClass() {
       return {display: !this.closeSearch};
+    },
+    searchImg() {
+      return  this.$store.state.searchImg;
     },
   },
   created() {

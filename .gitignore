@@ -2,6 +2,7 @@
 node_modules
 /dist
 Backup/
+authFirebase
 
 # local env files
 .env.local

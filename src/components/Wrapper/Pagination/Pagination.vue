@@ -7,13 +7,13 @@
 </template>
 
 <script>
-import Pages from './Pages/Pages.vue'
-import SearchPages from './SearchPages/SearchPages.vue'
+import Pages from './Pages/Pages.vue';
+import SearchPages from './SearchPages/SearchPages.vue';
 
 export default {
   components: {
-    Pages: Pages,
-    SearchPages: SearchPages,
+    Pages,
+    SearchPages,
   },
   data() {
     return {
@@ -24,7 +24,7 @@ export default {
       return this.$store.state.viewPages;
     },
   },
-}
+};
 </script>
 
 
@@ -32,12 +32,9 @@ export default {
 .changePages-enter-active, .changePages-leave-active {
   transition: opacity 1s linear;
 }
-.changePages-enter, .changePages-leave-to
-/* .component-fade-leave-active below version 2.1.8 */ {
+.changePages-enter, .changePages-leave-to{
   opacity: 0;
 }
-
-
 
 #pagination{
   background: #333;
@@ -63,7 +60,7 @@ export default {
     button:hover{
         cursor: pointer !important;
         color: #fff !important;
-        text-shadow: 0 0 20px rgb(255,224,27), 
+        text-shadow: 0 0 20px rgb(255,224,27),
                      0 0 20px rgb(255,224,27),
                      0 0 20px rgb(255,224,27),
                      0 0 20px rgb(255,224,27),
