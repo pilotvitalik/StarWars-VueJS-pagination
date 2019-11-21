@@ -22,7 +22,6 @@
 export default {
   data() {
     return {
-      value: '',
     };
   },
   methods: {
@@ -32,13 +31,13 @@ export default {
   },
   computed: {
     pages() {
-      return this.$store.state.searchPages;
+      return this.$store.state.searchPage.pages;
     },
     result() {
-      return this.$store.state.searchResult;
+      return this.$store.state.searchPage.searchResult;
     },
     showPages() {
-      return this.$store.state.isShowSearchPages;
+      return this.$store.state.searchPage.isShowSearchPages;
     },
   },
 };

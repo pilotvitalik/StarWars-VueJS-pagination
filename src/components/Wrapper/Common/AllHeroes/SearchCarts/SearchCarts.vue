@@ -24,10 +24,10 @@ export default {
   },
   computed: {
     searchListCharacters() {
-      return this.$store.state.searchListCharacters;
+      return this.$store.state.cart.searchListCharacters;
     },
     viewNameCarts() {
-      return this.$store.state.viewNameCarts;
+      return this.$store.state.views.viewNameCarts;
     },
   },
 };

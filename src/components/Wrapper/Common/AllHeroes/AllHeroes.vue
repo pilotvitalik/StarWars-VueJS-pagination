@@ -12,8 +12,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import ListCarts from './ListCarts/ListCarts.vue';
 import Search from './Search/Search.vue';
 import SearchCarts from './SearchCarts/SearchCarts.vue';
@@ -34,10 +32,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      'showNavLists',
-      'showComponent',
-    ]),
+    showComponent() {
+      return this.$store.state.views.view;
+    },
+    showNavLists() {
+      return this.$store.state.common.showNavLists;
+    },
   },
   created() {
     document.querySelector('body').style.overflowY = 'hidden';
@@ -75,7 +75,6 @@ export default {
     opacity: 1;
   }
 }
-
 #AllHeroes{
 display: flex;
 flex-direction: column;
@@ -144,7 +143,7 @@ background: #333;
             background: #1a1a1a;
             span{
               display: inline-block;
-              position: absolute;
+              position: relative;
               color: #fff;
               font-family: 'Roboto', sans-serif;
               font-weight: bold;
@@ -231,7 +230,7 @@ background: #333;
             ul{
               width: 80/100*130px;
               height: 135px;
-              top: 93px;
+              top: 73px;
               li:first-child{
                 height: 80px;
               }
@@ -301,7 +300,7 @@ background: #333;
             ul{
               width: 80px;
               height: 135px;
-              top: 33px;
+              top: 13px;
               li:first-child{
                 height: 80px;
               }

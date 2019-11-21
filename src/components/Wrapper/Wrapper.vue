@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import Header from './Header/Header.vue';
 import Footer from './Footer/Footer.vue';
 import Pagination from './Pagination/Pagination.vue';
@@ -30,10 +28,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      'showNavLists',
-      'showBlur',
-    ]),
+    showBlur() {
+      return this.$store.state.common.blur;
+    },
+    showNavLists() {
+      return this.$store.state.common.showNavLists;
+    },
   },
 };
 </script>

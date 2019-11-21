@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     view() {
-      return this.$store.state.viewPages;
+      return this.$store.state.views.viewPages;
     },
   },
 };

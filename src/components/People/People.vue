@@ -67,8 +67,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import PersonLoading from '../Wrapper/Preloader/PersonLoading/personLoading.vue';
 
 export default {
@@ -85,41 +83,41 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      'showPeople',
-    ]),
+    showPeople() {
+      return this.$store.state.person.showPeople;
+    },
     people() {
-      return this.$store.state.descriptionList;
+      return this.$store.state.person.descriptionList;
     },
     animateLoadHome() {
-      return this.$store.state.animateLoadHome;
+      return this.$store.state.person.animateLoadHome;
     },
     animateLoadFilms() {
-      return this.$store.state.animateLoadFilms.film;
+      return this.$store.state.person.animateLoadFilms;
     },
     showHome() {
-      return this.$store.state.showHome;
+      return this.$store.state.person.showHome;
     },
     showFilms() {
-      return this.$store.state.showFilms;
+      return this.$store.state.person.showFilms;
     },
     closeBtn() {
-      return this.$store.state.closeBtn;
+      return this.$store.state.person.closeBtn;
     },
     calendImg() {
-      return this.$store.state.calendImg;
+      return this.$store.state.person.calendImg;
     },
     filmImg() {
-      return this.$store.state.filmImg;
+      return this.$store.state.person.filmImg;
     },
     genderImg() {
-      return this.$store.state.genderImg;
+      return this.$store.state.person.genderImg;
     },
     ufoImg() {
-      return this.$store.state.ufoImg;
+      return this.$store.state.person.ufoImg;
     },
     worldImg() {
-      return this.$store.state.worldImg;
+      return this.$store.state.person.worldImg;
     },
   },
 };

@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import NamePerson from './NamePerson/NamePerson.vue';
 import LoadingPage from '../../../Preloader/LoadingPage/LoadingPage.vue';
 
@@ -26,11 +25,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      'listCharacters',
-    ]),
+    listCharacters() {
+      return this.$store.state.cart.listCharacters;
+    },
     viewNameCarts() {
-      return this.$store.state.viewNameCarts;
+      return this.$store.state.views.viewNameCarts;
     },
   },
 };

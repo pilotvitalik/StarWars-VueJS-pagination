@@ -26,6 +26,7 @@ header{
   position: static;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -46,7 +47,7 @@ header{
     }
   }
   div:last-child{
-    position: absolute;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -76,6 +77,7 @@ header{
     div:last-child{
       width: 406px;
       height: 96*2+40px;
+      margin-top: -278px;
       &>img{
         height: 96px;
       }
@@ -98,6 +100,7 @@ header{
     div:last-child{
       width: 212px;
       height: 50*2+24px;
+      margin-top: -243px;
       &>img{
         height: 50px;
       }

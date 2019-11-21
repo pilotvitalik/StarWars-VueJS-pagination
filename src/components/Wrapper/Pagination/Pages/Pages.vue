@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     pages() {
-      return this.$store.state.listPages;
+      return this.$store.state.page.listPages;
     },
   },
 };

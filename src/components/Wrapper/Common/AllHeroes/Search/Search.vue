@@ -32,11 +32,15 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      'activateSearch',
-      'displaySearch',
-      'closeSearch',
-    ]),
+    closeSearch() {
+      return this.$store.state.searchModule.isCloseSearch;
+    },
+    displaySearch() {
+      return this.$store.state.searchModule.isDisplaySearch;
+    },
+    activateSearch() {
+      return this.$store.state.searchModule.isActiveSearch;
+    },
     spanClass: function() {
       return{
         clickSearch: this.activateSearch,
@@ -54,7 +58,7 @@ export default {
       return {display: !this.closeSearch};
     },
     searchImg() {
-      return  this.$store.state.searchImg;
+      return  this.$store.state.searchModule.searchImg;
     },
   },
   created() {
