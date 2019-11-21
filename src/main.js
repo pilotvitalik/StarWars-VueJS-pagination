@@ -22,14 +22,7 @@ const router = new VueRouter({
 });
 
 const firebaseApp = firebase.initializeApp({
-  apiKey: 'AIzaSyAgJMgUzHUTsnypLqwUye350G6dPnmt8P4',
-  authDomain: 'starwars-18c80.firebaseapp.com',
-  databaseURL: 'https://starwars-18c80.firebaseio.com',
-  projectId: 'starwars-18c80',
-  storageBucket: 'starwars-18c80.appspot.com',
-  messagingSenderId: '740539701411',
-  appId: '1:740539701411:web:e5a436d43df182e5254716',
-  measurementId: 'G-SD2MLZNW5W',
+  /* *** (API auth key) */
 });
 
 const storageRef = firebaseApp.storage().ref();
